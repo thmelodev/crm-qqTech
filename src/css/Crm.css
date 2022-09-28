@@ -1,0 +1,49 @@
+.crm_background{
+    background-color: #242428;
+    display: flex;
+    min-width: max-content;
+    width: 70%;
+    border-radius: 1.5rem;
+}
+
+.border{
+    width: 4rem;
+    border-top-left-radius: 1.5rem;
+    border-bottom-left-radius:1.5rem ;
+}
+
+.crm_info{
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 4rem;
+}
+
+.crm_info h1 , span{
+    color: white;
+    display: flex;
+    
+
+}
+
+.crm_info h1{
+    font-size: 3rem;
+    margin-bottom: 4rem;
+}
+
+.crm_info div{
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto auto;
+    gap: 1rem;
+}
+.crm_info span{
+    font-size: 1.5rem;
+}
+
+.iAm{
+    color: #79D8FF;
+}
+
+.insideSpan{
+    padding-left: 0.5rem;
+}

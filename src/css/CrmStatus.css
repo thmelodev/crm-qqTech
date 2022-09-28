@@ -1,0 +1,75 @@
+.crm_filter{
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    
+    padding: 1.7rem;
+    padding-left: 2.7rem;
+    border-radius: 2.5rem;
+    
+}
+
+.crm_filter img{
+    filter: drop-shadow(0px 0px 1px #000000);
+}
+
+
+.rejected{
+    background-color: #FFB1B1;
+}
+
+.pending{
+    background-color: #FFF0A3;
+}
+
+.approved{
+    background-color: #A8FFBB;
+}
+
+.white{
+    background: rgba(81, 81, 81, 0.64);
+}
+
+.crm_icon{
+    max-height: 4rem;
+}
+
+.crm_status{
+    font-size: 3.5rem;
+    text-transform: uppercase;
+}
+
+.crm_status_NotActive{
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.crm_status_rejected{
+    color: rgba(255, 138, 118, 0.77);
+    text-shadow: 
+               -1px -1px 0px rgba(0, 0, 0, 0.6), 
+               -1px 1px 0px rgba(0, 0, 0, 0.6),      
+                1px -1px 0px rgba(0, 0, 0, 0.6),    
+                1px 0px 0px rgba(0, 0, 0, 0.6);
+}
+
+.crm_status_pending{
+    color: rgba(255, 210, 65, 0.72);
+    text-shadow: 
+               -1px -1px 0px rgba(0, 0, 0, 0.6), 
+               -1px 1px 0px rgba(0, 0, 0, 0.6),      
+                1px -1px 0px rgba(0, 0, 0, 0.6),    
+                1px 0px 0px rgba(0, 0, 0, 0.6);
+}
+
+.crm_status_approved{
+    color: rgba(76, 175, 80, 0.65);
+    text-shadow: 
+               -1px -1px 0px rgba(0, 0, 0, 0.6), 
+               -1px 1px 0px rgba(0, 0, 0, 0.6),      
+                1px -1px 0px rgba(0, 0, 0, 0.6),    
+                1px 0px 0px rgba(0, 0, 0, 0.6);
+
+}

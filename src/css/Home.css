@@ -1,0 +1,130 @@
+
+.background_home{
+    display: flex;
+    flex-direction: column;
+    gap: 10rem;
+    background-color: #22415D;
+    padding: 3rem 5rem;
+}
+
+.header{
+    display: grid;
+    grid-template-columns: min-content auto;
+    gap: 8rem;
+    align-items: center;
+}
+
+.header_left{
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: min-content min-content;
+    justify-items: center;
+    
+    gap: 6.2rem;
+}
+
+.user_details{
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto;
+    gap: 2rem;
+    align-items: center;
+}
+
+.user_details img{
+    width: 12rem;
+
+    border: solid black 0.2rem;
+    border-radius: 50%;
+}
+
+.user_info{
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: min-content min-content;
+    gap: 0.75rem;
+
+    justify-items: center;
+}
+
+.user_name , .user_registration{
+    color: white;
+}
+
+.user_name{
+    font-size: 2.5rem;
+    width: 14.5rem;
+}
+
+.user_registration{
+    font-size: 2.16rem;
+}
+
+.create_button{
+    position: relative;
+}
+
+.create_button img{
+    position: absolute;
+    top: 1.32rem;
+    left: 1.32rem;
+    width: 1.98rem;
+}
+
+.create_button input{
+    padding: 1.08rem 1.98rem 1.08rem 3.78rem;
+
+    font-size: 1.98rem;
+
+    border: none;
+    border-radius: 1.98rem;
+
+    background-color: #007690;
+    color: white;
+}
+
+.header_right{
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: min-content min-content min-content;
+
+    margin-left: auto;
+}
+
+.logout{
+    margin-left: auto;
+    width: 6rem;
+}
+
+.filters{
+    display: grid;
+    grid-template-columns: min-content min-content;
+    gap: 1.8rem;
+
+}
+
+.crm_status{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+button{
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+.crms{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+
+
+
