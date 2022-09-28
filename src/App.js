@@ -5,7 +5,7 @@ import Login from './screens/Login';
 function App() {
   return (
     <div>
-      <Home />
+      <Login />
     </div>
   );
 }

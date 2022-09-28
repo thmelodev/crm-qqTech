@@ -1,33 +1,55 @@
 //assets
 import Logo from '../assets/Logo.png';
-import View from '../assets/view.png';
+import Show from '../assets/show.png';
 import Hide from '../assets/hide.png';
 
 //css
 import "../css/Login.css";
+import { useState } from 'react';
 
 function Login() {
 
+  const [hiddenPassword, setHiddenPassword] = useState(true);
+
+  function handleEyePassword(){
+    setHiddenPassword(!hiddenPassword);
+  }
+          
+  function keyPress(evt){
+    if(isNaN(evt.key) && evt.key != 'Backspace'){
+      evt.preventDefault();
+    }
+  }
+    
+
+
   return (
-    <div className="background_login">
+    <main className="background_login">
       <div className="div_login">
         <img className='logo' src={Logo} alt="Logo" />
         <form>
           <div className="field">
-            <label for='registration'>Matrícula</label>
-            <input type="text" name="registration" />
+            <label htmlFor='registration'>Matrícula</label>
+            <input
+              onKeyDown={keyPress} 
+              type="text" 
+              name="registration"
+            />
           </div>
           <div className="field">
-            <label for='password'>Senha</label>
+            <label htmlFor='password'>Senha</label>
             <div className="password">
-              <input type="password" name="password" />
-              <img src={View} alt="mostrar senha"/>
+              <input 
+                type={hiddenPassword ? 'password' : 'text'} 
+                name="password"
+              />
+              <img src={hiddenPassword ? Show : Hide} onClick={handleEyePassword} alt="mostrar senha"/>
             </div>
           </div>
-          <input className='entrar' type='button' value='ENTRAR'/>
+          <button className='entrar'>ENTRAR</button>
         </form>
       </div>
-    </div>
+    </main>
   );
 }
 

@@ -16,7 +16,7 @@ function Home() {
   const [statusSelected, setStatusSelected] = useState("rejected");
 
   return (
-    <div className="background_home">
+    <main className="background_home">
       <div className="header">
         <div className="header_left">
           <div className="user_details">
@@ -110,7 +110,7 @@ function Home() {
           />
         </div>
       )}
-    </div>
+    </main>
   );
 }
 
