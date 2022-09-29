@@ -13,7 +13,7 @@ import { useState } from "react";
 import Crm from "../components/Crm";
 
 function Home() {
-  const [statusSelected, setStatusSelected] = useState("rejected");
+  let [statusSelected, setStatusSelected] = useState("rejected");
 
   return (
     <main className="background_home">
@@ -110,6 +110,11 @@ function Home() {
           />
         </div>
       )}
+
+      <div className={`loadMore ${statusSelected}`}>
+        <img src={Plus} alt='carregar mais crm' />
+      </div>
+
     </main>
   );
 }

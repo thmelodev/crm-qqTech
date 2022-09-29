@@ -2,9 +2,10 @@
 .background_home{
     display: flex;
     flex-direction: column;
-    gap: 10rem;
+    align-items: center;
+    gap: 6rem;
     background-color: #22415D;
-    padding: 3rem 5rem;
+    padding: 3rem 5rem 6rem 5rem;
 }
 
 .header{
@@ -121,9 +122,14 @@ button{
 .crms{
     display: flex;
     flex-direction: column;
-    align-items: center;
+    
 }
 
+.loadMore{
+    width: min-content;
+    padding: 1.5rem;
+    border-radius: 50%;
+}
 
 
 
