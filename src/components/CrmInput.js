@@ -6,8 +6,8 @@ function CrmInput({ title, label, name, type }) {
           <input type={type} name={name} />
         ) : (
           <div>
-            <label>{label}</label>
-            <input type={type} name={name} />
+            <label htmlFor={name}>{label}</label>
+            <input type={type} name={name} id={name} />
           </div>
         )
       ) : (

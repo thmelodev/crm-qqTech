@@ -1,0 +1,27 @@
+.background_createCrm{
+    display: flex;
+    flex-direction: column;
+
+    background-color: #242428;
+}
+
+.statusCrm{
+    width: 100vw;
+    height: 8rem;
+}
+
+.creating{
+    background-color: #007690;
+}
+
+.rejected{
+    background-color: #FFB1B1;
+}
+
+.pending{
+    background-color: #FFF0A3;
+}
+
+.approved{
+    background-color: #A8FFBB;
+}
