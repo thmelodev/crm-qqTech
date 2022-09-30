@@ -9,8 +9,10 @@ import Logout from "../assets/Logout.png";
 
 //css
 import "../css/Home.css";
-import { useState } from "react";
 import Crm from "../components/Crm";
+
+//hooks
+import { useState } from "react";
 
 function Home() {
   let [statusSelected, setStatusSelected] = useState("rejected");
