@@ -6,7 +6,7 @@ import Vector from "../assets/vector.svg";
 import Search from "../assets/search.png";
 
 //css
-import "../css/CreateCrm.css";
+import "../css/Crm.css";
 
 //hooks
 import { useState } from "react";
@@ -15,7 +15,7 @@ function CreateCrm() {
   const [statusSelected, setStatusSelected] = useState("creating");
 
   return (
-    <main className="background_createCrm">
+    <main className="background_crm">
       <form>
         <div className={`statusCrm ${statusSelected}`}></div>
 

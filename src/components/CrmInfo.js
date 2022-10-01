@@ -1,4 +1,4 @@
-import "../css/Crm.css";
+import "../css/CrmInfo.css";
 
 function Crm({
   crmNumber,
@@ -11,7 +11,7 @@ function Crm({
   approved,
 }) {
   return (
-    <div className="crm_background">
+    <div className="background_crmInfo">
       <div className={`border ${status}`}></div>
       <div className="crm_info">
         <h1>

@@ -1,5 +1,5 @@
 import './css/App.css';
-import CreateCrm from './screens/CreateCrm';
+import Crm from './screens/Crm';
 import Home from './screens/Home';
 import Login from './screens/Login';
 
@@ -7,7 +7,7 @@ function App() {
   return (
 
     <div>
-      <CreateCrm />
+      <Crm />
     </div>
   );
 }

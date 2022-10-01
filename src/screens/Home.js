@@ -9,7 +9,7 @@ import Logout from "../assets/Logout.png";
 
 //css
 import "../css/Home.css";
-import Crm from "../components/Crm";
+import CrmInfo from "../components/CrmInfo";
 
 //hooks
 import { useState } from "react";
@@ -82,7 +82,7 @@ function Home() {
 
       {statusSelected === "rejected" ? (
         <div className="crms">
-          <Crm
+          <CrmInfo
             crmNumber={'001'}
             title='Telas do CRM'
             status={statusSelected}
@@ -93,7 +93,7 @@ function Home() {
         </div>
       ) : statusSelected === "pending" ? (
         <div className="crms">
-          <Crm
+          <CrmInfo
             crmNumber={'003'}
             title='Banco de Dados'
             status={statusSelected}
@@ -103,7 +103,7 @@ function Home() {
         </div>
       ) : (
         <div className="crms">
-          <Crm
+          <CrmInfo
             crmNumber={'005'}
             title='Alteração da cor da tela de login'
             status={statusSelected}

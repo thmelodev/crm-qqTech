@@ -1,49 +1,27 @@
-.crm_background{
-    background-color: #242428;
-    display: flex;
-    min-width: max-content;
-    width: 75rem;
-    border-radius: 1.5rem;
-}
-
-.border{
-    width: 4rem;
-    border-top-left-radius: 1.5rem;
-    border-bottom-left-radius:1.5rem ;
-}
-
-.crm_info{
+.background_crm{
     display: flex;
     flex-direction: column;
-    padding: 2rem 4rem;
+
+    background-color: #242428;
 }
 
-.crm_info h1 , span{
-    color: white;
-    display: flex;
-    
-
+.statusCrm{
+    width: 100vw;
+    height: 8rem;
 }
 
-.crm_info h1{
-    font-size: 3rem;
-    margin-bottom: 4rem;
+.creating{
+    background-color: #007690;
 }
 
-.crm_info div{
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: auto auto auto;
-    gap: 1rem;
-}
-.crm_info span{
-    font-size: 1.5rem;
+.rejected{
+    background-color: #FFB1B1;
 }
 
-.iAm{
-    color: #79D8FF;
+.pending{
+    background-color: #FFF0A3;
 }
 
-.insideSpan{
-    padding-left: 0.5rem;
+.approved{
+    background-color: #A8FFBB;
 }
