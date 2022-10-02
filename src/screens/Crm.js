@@ -16,10 +16,9 @@ function CreateCrm() {
 
   return (
     <main className="background_crm">
-      <form>
-        <div className={`statusCrm ${statusSelected}`}></div>
-
-        <div>
+      <div className={`statusCrm ${statusSelected}`}></div>
+      <form className="form_crm">
+        <div className="header_crm">
           <img src={Vector} alt="Icone de voltar" />
           <CrmInput type="text" />
         </div>
@@ -29,7 +28,7 @@ function CreateCrm() {
         <CrmInput type="text" label="Objetivo *" name="objetivo" />
         <CrmInput type="text" label="Justificativa *" name="justificativa" />
         <CrmInput type="text" label="Alternativas" name="alternativa" />
-        <span>Possui data Legal?</span>
+        <span className='label_crm'>Possui data Legal?</span>
         <div className="radioDataLegal">
           <div>
             <input type="radio" name="dataLegal" value="yes" id="yes" />

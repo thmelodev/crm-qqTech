@@ -1,0 +1,46 @@
+.title_crm{
+    padding: 0.7rem;
+    margin-bottom: 10rem;
+    font-size: 3rem;
+    background-color: #242428;
+	border: groove white 0.0625rem;
+    color: white;
+}
+
+.label_crm{
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}   
+
+.input_crm{
+    padding: 0.7rem;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    background-color: #242428;
+	border: groove white 0.0625rem;
+    color: white;
+
+    width: 40rem;
+}
+
+.date_crm{
+    min-width: min-content;
+    width: min-content;
+}
+
+.textarea_crm{
+    height: 20rem;
+
+    min-height: 10rem;
+    min-width: 40vw;
+    max-width: 90vw;
+}
+
+.div_crmInfo{
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+}

@@ -9,6 +9,22 @@
     font-size: 10px;
 }
 
+.creating{
+    background-color: #007690;
+}
+
+.rejected{
+    background-color: #FFB1B1;
+}
+
+.pending{
+    background-color: #FFF0A3;
+}
+
+.approved{
+    background-color: #A8FFBB;
+}
+
 
 
 @media screen and (max-width: 500px){

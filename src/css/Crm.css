@@ -1,7 +1,10 @@
 .background_crm{
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
+
+    color: white;
     background-color: #242428;
 }
 
@@ -10,18 +13,29 @@
     height: 8rem;
 }
 
-.creating{
-    background-color: #007690;
+.form_crm{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    padding: 5rem;
+    align-items: center;
 }
 
-.rejected{
-    background-color: #FFB1B1;
+.header_crm{
+    display: flex;
 }
 
-.pending{
-    background-color: #FFF0A3;
+.header_crm img{
+    margin-right: auto;
+    position: absolute;
+    width: 2rem;
+
+    left: 5rem;
+    top: 6.25rem;
 }
 
-.approved{
-    background-color: #A8FFBB;
-}
+
+
+
+
