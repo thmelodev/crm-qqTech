@@ -27,6 +27,7 @@
 .date_crm{
     min-width: min-content;
     width: min-content;
+    margin: 3rem 0;
 }
 
 .textarea_crm{

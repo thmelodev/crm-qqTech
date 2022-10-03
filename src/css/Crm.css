@@ -26,6 +26,12 @@
     display: flex;
 }
 
+.title-crm{
+    margin-bottom: 10rem;
+    font-size: 3rem;
+    text-transform: uppercase;
+}
+
 .header_crm img{
     margin-right: auto;
     position: absolute;
@@ -34,6 +40,34 @@
     left: 5rem;
     top: 6.25rem;
 }
+
+.label_date{
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+}
+
+.date{
+    display: none;
+}
+
+.radioDataLegal{
+    display: flex;
+    gap: 8rem;
+}
+
+.radioDataLegal input{
+    scale: 1.5;
+    width: min-content;
+    margin-right: 0.8rem;
+}
+
+.radioDataLegal label{
+    font-size: 2rem;
+    text-transform: uppercase;
+}
+
+
 
 
 
