@@ -9,7 +9,7 @@
 }
 
 .statusCrm{
-    width: 100vw;
+    width: 100%;
     height: 8rem;
 }
 
@@ -32,13 +32,36 @@
     text-transform: uppercase;
 }
 
-.header_crm img{
+.header_img{
     margin-right: auto;
     position: absolute;
     width: 2rem;
 
     left: 5rem;
-    top: 6.25rem;
+    top: 5rem;
+}
+
+.header_img_creating{
+    top: 6rem;
+}
+
+.version_background{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    top: 3rem;
+    right: 5rem;
+
+    padding: 1.2rem;
+    border-radius: 50%;
+    min-width: min-content;
+}
+
+.version_background img{
+    width: 5rem;
+    height: auto;
 }
 
 .label_date{
@@ -47,13 +70,14 @@
     margin-bottom: 3rem;
 }
 
-.date{
+#date{
     display: none;
 }
 
 .radioDataLegal{
     display: flex;
     gap: 8rem;
+    margin-bottom: 3rem;
 }
 
 .radioDataLegal input{
@@ -66,6 +90,101 @@
     font-size: 2rem;
     text-transform: uppercase;
 }
+
+.sectorsDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sectorsDiv label{
+    font-size: 2.2rem;
+    text-transform: uppercase;
+}
+
+.sectorSearcher{
+    display: flex;
+    position: relative;
+    margin: 2rem 0 6rem 0;
+}
+
+.sectorSearcher img{
+    position: absolute;
+    top: 0.8rem;
+    left: 1rem;
+    width: 2.2rem;
+}
+
+.sectorSearcher input{
+    padding: 0.5rem;
+    padding-left: 4rem;
+    font-size: 2.2rem;
+    max-width: 23rem;
+
+    background-color: #B9CDE5;
+    border-radius: 1.25rem;
+    border: none;
+}
+
+.sectors{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    max-width: 30rem;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.filesDiv{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.filesDiv span{
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+}
+
+.files{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 30rem;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.filesAdd{
+    background-color: #009028;
+    filter: drop-shadow(0px 0px 20.4991px rgba(0, 0, 0, 0.5));
+
+    text-transform: uppercase;
+    color: white;
+    border-radius: 2.2rem;
+    border:none;
+    
+    font-size: 1.5rem;
+    padding: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.submit{
+    background-color: #E0BE07;
+    filter: drop-shadow(0px 0px 20.4991px rgba(0, 0, 0, 0.5));
+
+    text-transform: uppercase;
+    color: white;
+    border-radius: 2.2rem;
+    border:none;
+    
+    font-size: 2rem;
+    padding: 1.2rem 2.2rem;
+    margin-bottom: 2rem;
+}
+
 
 
 

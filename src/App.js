@@ -7,7 +7,7 @@ function App() {
   return (
 
     <div>
-      <Crm status='rejected' title='teste' />
+      <Crm status='rejected' title='CRM 001 - AKFKAKFK' />
     </div>
   );
 }

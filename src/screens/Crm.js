@@ -4,6 +4,7 @@ import CrmInput from "../components/CrmInput";
 //assets
 import Vector from "../assets/vector.svg";
 import Search from "../assets/search.png";
+import Version from "../assets/version_control.png"
 
 //css
 import "../css/Crm.css";
@@ -12,7 +13,6 @@ import "../css/Crm.css";
 import { useState } from "react";
 
 function Crm({status,title}) {
-  const [statusSelected, setStatusSelected] = useState(status);
   const [haveLegalDate, setHaveLegalDate] = useState(false);
 
   function handleLegalDate(){
@@ -24,23 +24,29 @@ function Crm({status,title}) {
     }else {
       div_date.style.display = 'none';
       div_radio.style.marginBottom = '3rem';
-
     }
   }
 
   return (
     <main className="background_crm">
-      <div className={`statusCrm ${statusSelected}`}></div>
+      <div className={`statusCrm ${status}`}></div>
       <form className="form_crm">
         {
-          statusSelected === 'creating'
+          status === 'creating'
           ? (
             <div className="header_crm">
-              <img src={Vector} alt="Icone de voltar" />
+              <img className="header_img header_img_creating" src={Vector} alt="Icone de voltar" />
               <CrmInput type="text" />
             </div>
           )
-          : (<h1 className="title-crm" >{title}</h1>)
+          : (
+            <div className="header_crm">
+              <img className="header_img" src={Vector} alt="Icone de voltar" />
+              <h1 className="title-crm" >{title}</h1>
+              <div className={`version_background ${status}`}>
+                <img src={Version} alt='Icone de versionamento' />
+              </div>
+            </div>)
         }
         
         <CrmInput type="text" label="A necessidade de *" name="necessidade" />
@@ -64,25 +70,21 @@ function Crm({status,title}) {
           <CrmInput type='date' name='dateAbertura' />
         </div>
         <CrmInput type="text" label="Comportamento Offline" name="comportamentoOffline" />
-        <div>
+        <div className="sectorsDiv">
             <label htmlFor="setoresEnvolvidos">Setores Envolvidos</label>
-            <div>
+            <div className="sectorSearcher">
                 <img src={Search} alt="Icone de pesquisa"/>
                 <input type='text' name='setoresEnvolvidos' id='setoresEnvolvidos'/>
             </div>
-            <div className="sectors">
-
-            </div>
+            <div className="sectors"></div>
         </div>
-        <div>
+        <div className="filesDiv">
             <span>Arquivos</span>
-            <div className="Files">
-
-            </div>
-            <input type='button' value='adicionar arquivos'/>
+            <div className="files"></div>
+            <input className="filesAdd" type='button' value='adicionar arquivos'/>
         </div>
 
-        <input type='submit' value='enviar crm'/>
+        <input className='submit' type='submit' value='enviar crm'/>
 
       </form>
     </main>
