@@ -1,14 +1,19 @@
 import './css/App.css';
-import Crm from './screens/Crm';
-import Home from './screens/Home';
-import Login from './screens/Login';
+import Crm from './pages/Crm';
+import Home from './pages/Home';
+import Login from './pages/Login';
+
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
-
-    <div>
-      <Crm status='rejected' title='CRM 001 - AKFKAKFK' />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<Login />} />
+        <Route path='/home' element={<Home />} />
+        <Route path='/crm' element={<Crm />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

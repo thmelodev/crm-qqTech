@@ -1,6 +1,6 @@
 import "../css/CrmInput.css";
 
-function CrmInput({ title, label, name, type }) {
+function CrmInput({ title, label, name, type, onChange }) {
   return (
     <div>
       {title === undefined ? (
@@ -11,6 +11,7 @@ function CrmInput({ title, label, name, type }) {
               type={type}
               name={name}
               placeholder="NOME DA CRM"
+              onChange={onChange}
             />
           ) : (
             <input
@@ -18,6 +19,7 @@ function CrmInput({ title, label, name, type }) {
               type={type}
               name={name}
               id={name}
+              onChange={onChange}
             />
           )
         ) : (
@@ -31,6 +33,7 @@ function CrmInput({ title, label, name, type }) {
               type={type}
               name={name}
               id={name}
+              onChange={onChange}
             />
           </div>
         )

@@ -13,12 +13,21 @@ import "../css/Crm.css";
 import { useState } from "react";
 
 function Crm({status,title}) {
-  const [haveLegalDate, setHaveLegalDate] = useState(false);
+  const [necessidade, setNecessidade] = useState(null);
+  const [impactoCriacao, setImpactoCriacao] = useState(null);
+  const [descricao, setDescricao] = useState(null);
+  const [objetivo, setObjetivo] = useState(null);
+  const [justificativa, setJustificativa] = useState(null);
+  const [alternativas, setAlternativas] = useState(null);
+  const [dataLegal, setDataLegal] = useState(null);
+  const [comportamentoOffline, setComportamentoOffline] = useState(null);
+  const [setoresEnvolvidos, setSetoresEnvolvidos] = useState(null);
+  const [arquivos, setArquivos] = useState(null);
 
   function handleLegalDate(){
     const div_date = document.getElementById('date');
     const div_radio = document.getElementsByClassName('radioDataLegal')[0]
-    if(document.querySelector('input[name="dataLegal"]:checked').value === 'yes'){
+    if(document.querySelector('input[name="legalData"]:checked').value === 'yes'){
       div_date.style.display = 'flex';
       div_radio.style.marginBottom = '0';
     }else {
@@ -49,25 +58,25 @@ function Crm({status,title}) {
             </div>)
         }
         
-        <CrmInput type="text" label="A necessidade de *" name="necessidade" />
-        <CrmInput type="text" label="Cujo impacto é *" name="impactoCriacao" />
-        <CrmInput type="text" label="Descrição *" name="descricao" />
-        <CrmInput type="text" label="Objetivo *" name="objetivo" />
-        <CrmInput type="text" label="Justificativa *" name="justificativa" />
-        <CrmInput type="text" label="Alternativas" name="alternativa" />
+        <CrmInput type="text" label="A necessidade de *" name="necessidade" onChange={(e) => setNecessidade(e.target.value)} />
+        <CrmInput type="text" label="Cujo impacto é *" name="impactoCriacao" onChange={(e) => setImpactoCriacao(e.target.value)} />
+        <CrmInput type="text" label="Descrição *" name="descricao" onChange={(e) => setDescricao(e.target.value)} />
+        <CrmInput type="text" label="Objetivo *" name="objetivo" onChange={(e) => setObjetivo(e.target.value)} />
+        <CrmInput type="text" label="Justificativa *" name="justificativa" onChange={(e) => setJustificativa(e.target.value)} />
+        <CrmInput type="text" label="Alternativas" name="alternativa" onChange={(e) => setAlternativas(e.target.value)}/>
         <span className='label_date'>Possui data Legal?</span>
         <div className="radioDataLegal">
           <div>
-            <input type="radio" name="dataLegal" value="yes" id="yes" onChange={handleLegalDate} />
+            <input type="radio" name="legalData" value="yes" id="yes" onChange={handleLegalDate} />
             <label htmlFor="yes">Sim</label>
           </div>
           <div>
-            <input type="radio" name="dataLegal" value="no" id="no" onChange={handleLegalDate} />
+            <input type="radio" name="legalData" value="no" id="no" onChange={handleLegalDate} />
             <label htmlFor="no">Não</label>
           </div>
         </div>
         <div id="date">
-          <CrmInput type='date' name='dateAbertura' />
+          <CrmInput type='date' name='dataLegal' onChange={(e) => setDataLegal(e.target.value)} />
         </div>
         <CrmInput type="text" label="Comportamento Offline" name="comportamentoOffline" />
         <div className="sectorsDiv">

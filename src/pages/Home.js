@@ -13,9 +13,10 @@ import CrmInfo from "../components/CrmInfo";
 
 //hooks
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
-  let [statusSelected, setStatusSelected] = useState("rejected");
+  let [statusSelected, setStatusSelected] = useState("pending");
 
   return (
     <main className="background_home">
@@ -28,11 +29,12 @@ function Home() {
               <span className="user_registration">980135</span>
             </div>
           </div>
-
-          <div className="create_button">
-            <input type="button" value="CRIAR CRM" />
-            <img src={Plus} alt="Icone de adicionar" />
-          </div>
+          <Link to="/crm">
+            <div className="create_button">
+              <input type="button" value="CRIAR CRM" />
+              <img src={Plus} alt="Icone de adicionar" />
+            </div>
+          </Link>
         </div>
 
         <div className="header_right">
@@ -82,41 +84,43 @@ function Home() {
 
       {statusSelected === "rejected" ? (
         <div className="crms">
-          <CrmInfo
-            crmNumber={'001'}
-            title='Telas do CRM'
-            status={statusSelected}
-            creator='Thiago Melo - Mercantil'
-            rejector='Allan Crasso - TI'
-            motive='Está faltando um monte de telas'
-          />
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"001"}
+              title="Telas do CRM"
+              status={statusSelected}
+              creator="Thiago Melo - Mercantil"
+              rejector="Allan Crasso - TI"
+              motive="Está faltando um monte de telas"
+            />
+          </Link>
+          
         </div>
       ) : statusSelected === "pending" ? (
         <div className="crms">
           <CrmInfo
-            crmNumber={'003'}
-            title='Banco de Dados'
+            crmNumber={"003"}
+            title="Banco de Dados"
             status={statusSelected}
-            creator='Victor Ammari - Financeiro'
-            notApproved={['RH', 'Contábil']}
+            creator="Victor Ammari - Financeiro"
+            notApproved={["RH", "Contábil"]}
           />
         </div>
       ) : (
         <div className="crms">
           <CrmInfo
-            crmNumber={'005'}
-            title='Alteração da cor da tela de login'
+            crmNumber={"005"}
+            title="Alteração da cor da tela de login"
             status={statusSelected}
-            creator='Thiago Melo - Mercantil'
-            approved={['RH - Gabriel Bora', 'Contábil - Gabriel Pereira']}
+            creator="Thiago Melo - Mercantil"
+            approved={["RH - Gabriel Bora", "Contábil - Gabriel Pereira"]}
           />
         </div>
       )}
 
       <div className={`loadMore ${statusSelected}`}>
-        <img src={Plus} alt='carregar mais crm' />
+        <img src={Plus} alt="carregar mais crm" />
       </div>
-
     </main>
   );
 }
