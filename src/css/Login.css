@@ -87,3 +87,53 @@
     opacity: 0.3;
 }
 
+@media screen and (max-width: 500px) {
+    
+    .div_login{
+    
+        padding: 2rem 4rem;
+        box-shadow: 0px 0.0468rem 0.374rem 0.28rem #4F84C1;
+        border-radius: 2rem;
+    }
+    
+    .div_login form {
+        gap: 1rem;
+    }
+    
+    .field label{
+        font-size: 1.87rem;
+        padding-left: 0.624rem;
+        padding-bottom: 0.65rem;
+    }
+    
+    .field input{
+        border-radius: 0.624rem;
+    
+        padding: 0.416rem;
+        padding-left: 1.04rem;
+        
+        font-size: 2.08rem;
+    }
+    
+    .password img{
+        position: absolute;
+        bottom: 0.416rem;
+        right: 1.04rem;
+        width: 2.49rem;
+    }
+    
+    .logo{
+        width: 26rem;
+        margin-bottom: 1.625rem;
+    }
+    
+    .entrar{
+        font-size: 2rem;
+    
+        border-radius: 1.82rem;
+    
+        margin-top: 1.625rem;
+        padding: 1.3rem 5.2rem;
+    } 
+}
+

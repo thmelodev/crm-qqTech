@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 6rem;
     background-color: #22415D;
     padding: 3rem 5rem 6rem 5rem;
@@ -11,6 +12,7 @@
 .header{
     display: grid;
     grid-template-columns: min-content auto;
+    grid-template-rows: auto;
     gap: 8rem;
     align-items: center;
 }
@@ -106,8 +108,9 @@
 
 .crm_status{
     display: flex;
-    justify-content: space-evenly;
+    gap: 4rem;
 }
+
 
 button{
     background: none;
@@ -117,12 +120,15 @@ button{
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
+    width: 100%;
 }
 
 .crms{
     display: flex;
-    flex-direction: column;
-    
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 3rem;
 }
 
 .loadMore{
@@ -130,6 +136,73 @@ button{
     padding: 1.5rem;
     border-radius: 50%;
 }
+
+
+
+@media screen and (max-width: 56.30rem){
+    .header{
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: min-content auto;
+        justify-items: center;
+        align-items: center;
+    }
+
+    .header_left a{
+        margin-right: 8rem;
+    }
+
+    .logout{
+        position: absolute;
+        top: 6rem;
+        right: 5rem;
+    }
+
+}
+
+@media screen and (max-width: 620px) {
+    .filters{
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: min-content min-content min-content min-content;
+    }
+
+    .header{
+        justify-items: center;
+    }
+
+    .logout{
+        top: 20rem;
+        right: 7rem;
+    }
+
+    .crm_status{
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+   
+}
+
+@media screen and (min-width: 901px) and (max-width: 1140px){
+    .header{
+        display: grid;
+        grid-template-columns: auto;
+        grid-template-rows: min-content auto;
+        justify-items: center;
+    }
+
+    .logout{
+        position: absolute;
+        top: 6rem;
+        right: 20rem;
+    }
+
+}
+
+
+
+
 
 
 

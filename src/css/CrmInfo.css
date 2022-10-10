@@ -6,6 +6,10 @@
     border-radius: 1.5rem;
 }
 
+.background_crmInfo , .crm_info{
+    max-width: 330px;
+}
+
 .border{
     width: 4rem;
     border-top-left-radius: 1.5rem;
@@ -18,25 +22,45 @@
     padding: 2rem 4rem;
 }
 
-.crm_info h1 , span{
+.crm_info h1 , .crm_info span, .insideSpan{
     color: white;
+}
+.criador{
     display: flex;
-    
+    align-items: center;
+    margin-bottom: 2rem;
+}
+.criador span{
+    padding-left: 0.3rem;
+    font-size: 1.4rem;
+}
+.list_title{
+    margin-bottom: 0.5rem;
+}
 
+.insideSpan{
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    list-style: none;
+}
+
+.insideSpan li{
+    font-size: 1.4rem;
 }
 
 .crm_info h1{
-    font-size: 3rem;
+    font-size: 2rem;
     margin-bottom: 4rem;
+    margin-bottom: 2rem;
 }
 
 .crm_info div{
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: auto auto auto;
-    gap: 1rem;
 }
-.crm_info span{
+.crm_info span, .insideSpan li{
     font-size: 1.5rem;
 }
 
@@ -44,6 +68,4 @@
     color: #79D8FF;
 }
 
-.insideSpan{
-    padding-left: 0.5rem;
-}
+

@@ -7,29 +7,29 @@
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
     font-size: 10px;
+    --rejected: #FFB1B1;
+    --creating: #007690;
+    --pending: #FFF0A3;
+    --approved: #A8FFBB;
 }
 
+
 .creating{
-    background-color: #007690;
+    background-color: var(--creating);
 }
 
 .rejected{
-    background-color: #FFB1B1;
+    background-color: var(--rejected);
 }
 
 .pending{
-    background-color: #FFF0A3;
+    background-color: var(--pending);
 }
 
 .approved{
-    background-color: #A8FFBB;
+    background-color: var(--approved);
 }
 
 
 
-@media screen and (max-width: 500px){
-    *{
-        font-size: 7px;
-    }
-}
 

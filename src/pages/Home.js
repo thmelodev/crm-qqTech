@@ -90,31 +90,105 @@ function Home() {
               title="Telas do CRM"
               status={statusSelected}
               creator="Thiago Melo - Mercantil"
-              rejector="Allan Crasso - TI"
-              motive="Está faltando um monte de telas"
+              rejectors={["Allan Crasso - TI", "Victor Ammari - Financeiro"]}
             />
           </Link>
-          
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"001"}
+              title="Telas do CRM"
+              status={statusSelected}
+              creator="Thiago Melo - Mercantil"
+              rejectors={["Allan Crasso - TI", "Victor Ammari - Financeiro"]}
+            />
+          </Link>
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"001"}
+              title="Telas do CRM"
+              status={statusSelected}
+              creator="Thiago Melo - Mercantil"
+              rejectors={["Allan Crasso - TI", "Victor Ammari - Financeiro"]}
+            />
+          </Link>
         </div>
       ) : statusSelected === "pending" ? (
         <div className="crms">
-          <CrmInfo
-            crmNumber={"003"}
-            title="Banco de Dados"
-            status={statusSelected}
-            creator="Victor Ammari - Financeiro"
-            notApproved={["RH", "Contábil"]}
-          />
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"003"}
+              title="Banco de Dados"
+              status={statusSelected}
+              creator="Victor Ammari - Financeiro"
+              notApproved={["RH", "Contábil"]}
+            />
+          </Link>
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"003"}
+              title="Banco de Dados"
+              status={statusSelected}
+              creator="Victor Ammari - Financeiro"
+              notApproved={["RH", "Contábil"]}
+            />
+          </Link>
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"003"}
+              title="Banco de Dados"
+              status={statusSelected}
+              creator="Victor Ammari - Financeiro"
+              notApproved={["RH", "Contábil"]}
+            />
+          </Link>
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"003"}
+              title="Banco de Dados"
+              status={statusSelected}
+              creator="Victor Ammari - Financeiro"
+              notApproved={["RH", "Contábil"]}
+            />
+          </Link>
         </div>
       ) : (
         <div className="crms">
-          <CrmInfo
-            crmNumber={"005"}
-            title="Alteração da cor da tela de login"
-            status={statusSelected}
-            creator="Thiago Melo - Mercantil"
-            approved={["RH - Gabriel Bora", "Contábil - Gabriel Pereira"]}
-          />
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"005"}
+              title="Alteração da cor da tela de login"
+              status={statusSelected}
+              creator="Thiago Melo - Mercantil"
+              approved={["RH - Gabriel Bora", "Contábil - Gabriel Pereira"]}
+            />
+          </Link>
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"005"}
+              title="Alteração da cor da tela de login"
+              status={statusSelected}
+              creator="Thiago Melo - Mercantil"
+              approved={["RH - Gabriel Bora", "Contábil - Gabriel Pereira"]}
+            />
+          </Link>
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"005"}
+              title="Alteração da cor da tela de login"
+              status={statusSelected}
+              creator="Thiago Melo - Mercantil"
+              approved={["RH - Gabriel Bora", "Contábil - Gabriel Pereira"]}
+            />
+          </Link>
+          <Link to="/crm">
+            <CrmInfo
+              crmNumber={"005"}
+              title="Alteração da cor da tela de login"
+              status={statusSelected}
+              creator="Thiago Melo - Mercantil"
+              approved={["RH - Gabriel Bora", "Contábil - Gabriel Pereira"]}
+            />
+          </Link>
         </div>
       )}
 

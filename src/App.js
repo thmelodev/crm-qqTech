@@ -11,7 +11,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/home' element={<Home />} />
-        <Route path='/crm' element={<Crm />} />
+        <Route path='/crm' element={<Crm status={'creating'}/>} />
       </Routes>
     </BrowserRouter>
   );

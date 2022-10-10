@@ -43,18 +43,22 @@ function Crm({status,title}) {
         {
           status === 'creating'
           ? (
-            <div className="header_crm">
-              <img className="header_img header_img_creating" src={Vector} alt="Icone de voltar" />
+            <div className="header_crm_creating">
+              <button className="header_img">
+              <img src={Vector} alt="Icone de voltar" />
+              </button>
               <CrmInput type="text" />
             </div>
           )
           : (
             <div className="header_crm">
-              <img className="header_img" src={Vector} alt="Icone de voltar" />
+              <button className="header_img">
+              <img src={Vector} alt="Icone de voltar" />
+              </button>
               <h1 className="title-crm" >{title}</h1>
-              <div className={`version_background ${status}`}>
+              <button className={`version_background ${status}`}>
                 <img src={Version} alt='Icone de versionamento' />
-              </div>
+              </button>
             </div>)
         }
         

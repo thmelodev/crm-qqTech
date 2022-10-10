@@ -1,3 +1,4 @@
+import { render } from "react-dom";
 import "../css/CrmInfo.css";
 
 function Crm({
@@ -5,8 +6,7 @@ function Crm({
   title,
   status,
   creator,
-  rejector,
-  motive,
+  rejectors, 
   notApproved,
   approved,
 }) {
@@ -18,27 +18,35 @@ function Crm({
           CRM {crmNumber} - {title}
         </h1>
         <div>
-          <span>
+          <span className="criador">
             Criador: <span className="insideSpan">{` ${creator}`}</span>
           </span>
           {status === "rejected" ? (
             <div>
-              <span>
-                Rejeitado por: <span className="insideSpan" >{` ${rejector}`}</span>
-              </span>
-              <span>Motivo:<span className="insideSpan" >{motive}</span></span>
-            </div>
+            <span className={`list_title`}>Rejeitado por</span>
+            <ul className="insideSpan">
+              {rejectors.map((element) => {
+                return <li key={element.toString()}>{`${element} \n`}</li>;
+              })}
+            </ul>
+          </div>
           ) : status === "pending" ? (
             <div>
-              <span>
-                    Falta Aprovação:<span className="insideSpan" >{`${notApproved.join(', ')}`}</span>
-              </span>
+              <span className="list_title">Faltando Aprovação</span>
+              <ul className="insideSpan">
+                {notApproved.map((element) => {
+                  return <li key={element.toString()}>{`${element} \n`}</li>;
+                })}
+              </ul>
             </div>
           ) : (
             <div>
-                <span>
-                    Aprovado por:<span className="insideSpan" >{` ${approved.join(', ')}`}</span>
-                </span>
+              <span className="list_title">Aprovado por</span>
+              <ul className="insideSpan">
+                {approved.map((element) => {
+                  return <li key={element.toString()}>{`${element} \n`}</li>;
+                })}
+              </ul>
             </div>
           )}
         </div>
