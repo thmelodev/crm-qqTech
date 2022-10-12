@@ -1,5 +1,7 @@
 //components
 import CrmInput from "../components/CrmInput";
+import FileUpload from "../components/FileUpload";
+import File from "../components/File";
 
 //assets
 import Vector from "../assets/vector.svg";
@@ -10,7 +12,9 @@ import Version from "../assets/version_control.png"
 import "../css/Crm.css";
 
 //hooks
-import { useState } from "react";
+import React, { useState } from "react";
+import SectorSelected from "../components/SectorSelected";
+
 
 function Crm({status,title}) {
   const [necessidade, setNecessidade] = useState(null);
@@ -21,8 +25,9 @@ function Crm({status,title}) {
   const [alternativas, setAlternativas] = useState(null);
   const [dataLegal, setDataLegal] = useState(null);
   const [comportamentoOffline, setComportamentoOffline] = useState(null);
-  const [setoresEnvolvidos, setSetoresEnvolvidos] = useState(null);
-  const [arquivos, setArquivos] = useState(null);
+  const [setoresEnvolvidos, setSetoresEnvolvidos] = useState([]);
+  const [arquivos, setArquivos] = useState([]); 
+  const [isLoading, setIsLoading] = useState(false)
 
   function handleLegalDate(){
     const div_date = document.getElementById('date');
@@ -33,6 +38,15 @@ function Crm({status,title}) {
     }else {
       div_date.style.display = 'none';
       div_radio.style.marginBottom = '3rem';
+    }
+  }
+  
+  function enterPress(evt){
+    if(evt.key === 'Enter'){
+      evt.preventDefault();
+      const sectorsInvolved = document.getElementById('setoresEnvolvidos')
+      setSetoresEnvolvidos([...setoresEnvolvidos,sectorsInvolved.value])
+      sectorsInvolved.value = ''
     }
   }
 
@@ -87,14 +101,30 @@ function Crm({status,title}) {
             <label htmlFor="setoresEnvolvidos">Setores Envolvidos</label>
             <div className="sectorSearcher">
                 <img src={Search} alt="Icone de pesquisa"/>
-                <input type='text' name='setoresEnvolvidos' id='setoresEnvolvidos'/>
+                <input 
+                onKeyDown={enterPress} 
+                type='text' 
+                name='setoresEnvolvidos' 
+                id='setoresEnvolvidos'
+                />
             </div>
-            <div className="sectors"></div>
+            <div className="sectors">
+              {setoresEnvolvidos.map((sector,i)=>{
+                return <SectorSelected key={i} sector={sector}/>
+              })}
+            </div>
         </div>
         <div className="filesDiv">
-            <span>Arquivos</span>
-            <div className="files"></div>
-            <input className="filesAdd" type='button' value='adicionar arquivos'/>
+            <span className="filesDiv_title">Arquivos</span>
+            <div className="files">
+            {arquivos.map((file,i)=>{
+                return <File key={i} file={file}/>
+              })}
+            </div>
+            <div className="filesAdd" value='adicionar arquivos'>
+              <span>ADICIONAR ARQUIVOS</span>
+              <FileUpload files={arquivos} setFiles={setArquivos} className='file_upload' />
+            </div>
         </div>
 
         <input className='submit' type='submit' value='enviar crm'/>

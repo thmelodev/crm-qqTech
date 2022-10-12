@@ -1,0 +1,15 @@
+.file{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.file img{
+    width: 5rem;
+}
+
+.file span{
+    font-size: 1.5rem;
+}
