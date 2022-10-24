@@ -1,19 +1,9 @@
 import './css/App.css';
-import Crm from './pages/Crm';
-import Home from './pages/Home';
-import Login from './pages/Login';
-
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import RouterApp from './routes/routes';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='/home' element={<Home />} />
-        <Route path='/crm' element={<Crm status={'creating'}/>} />
-      </Routes>
-    </BrowserRouter>
+    <RouterApp/>
   );
 }
 
