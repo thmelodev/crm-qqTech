@@ -9,21 +9,36 @@ import "../css/Login.css";
 //hooks
 import { useState } from 'react';
 
+//services
+import appService from '../services/AppService';
+import { Navigate } from 'react-router-dom';
+
 function Login() {
 
   const [hiddenPassword, setHiddenPassword] = useState(true);
+  const [matricula, setMatricula] = useState();
+  const [senha, setSenha] = useState();
+  const [isLoading, loading] = useState(false);
 
   function handleEyePassword(){
     setHiddenPassword(!hiddenPassword);
   }
-          
-  function keyPress(evt){
-    if(isNaN(evt.key) && evt.key != 'Backspace'){
-      evt.preventDefault();
+              
+  function handleEntrar(evt){
+    evt.preventDefault();
+    console.log(matricula)
+    console.log(senha)
+    let data = {
+      "username": matricula,
+      "password": senha
     }
-  }
-    
+    try{
+      const response = appService.login(data);
+    }catch(error){
+      console.error(error) 
+    }
 
+  }
 
   return (
     <main className="background_login">
@@ -31,24 +46,25 @@ function Login() {
         <img className='logo' src={Logo} alt="Logo" />
         <form>
           <div className="field">
-            <label htmlFor='registration'>Matrícula</label>
+            <label htmlFor='username'>Matrícula</label>
             <input
-              onKeyDown={keyPress} 
+              onChange={(e) => setMatricula(e.target.value)}
               type="text" 
-              name="registration"
+              name="username"
             />
           </div>
           <div className="field">
             <label htmlFor='password'>Senha</label>
             <div className="password">
               <input 
+                onChange={(e) => setSenha(e.target.value)}
                 type={hiddenPassword ? 'password' : 'text'} 
                 name="password"
               />
               <img src={hiddenPassword ? Show : Hide} onClick={handleEyePassword} alt="mostrar senha"/>
             </div>
           </div>
-          <button className='entrar'>ENTRAR</button>
+          <button onClick={handleEntrar} className='entrar'>ENTRAR</button>
         </form>
       </div>
     </main>
