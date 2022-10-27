@@ -2,49 +2,41 @@
 import CrmInput from "../components/CrmInput";
 import FileUpload from "../components/FileUpload";
 import File from "../components/File";
+import Sector from "../components/Sector";
 
 //assets
 import Vector from "../assets/vector.svg";
-import Search from "../assets/search.png";
-import Version from "../assets/version_control.png";
 
 //css
-import "../css/Crm.css";
+import "../css/CreateCrm.css";
 
 //hooks
 import React, { useEffect, useState } from "react";
-import System from "../components/System";
-import Sector from "../components/Sector";
 import setorService from "../services/SetorService";
-import sistemaService from "../services/SistemaService";
-import { useNavigate } from "react-router-dom";
 import crmService from "../services/CrmService";
+import { useNavigate } from "react-router-dom";
+import System from "../components/System";
+import sistemaService from "../services/SistemaService";
 
-function Crm({ status, title }) {
-  const [crm, setCrm] = useState();
-  const [nome, setNome] = useState('');
-  const [necessidade, setNecessidade] = useState('');
-  const [impacto, setImpacto] = useState('');
-  const [descricao, setDescricao] = useState('');
-  const [objetivo, setObjetivo] = useState('');
-  const [justificativa, setJustificativa] = useState('');
-  const [alternativas, setAlternativas] = useState('');
+function CreateCrm() {
+  const [nome, setNome] = useState("");
+  const [necessidade, setNecessidade] = useState(null);
+  const [impactoCriacao, setImpactoCriacao] = useState(null);
+  const [descricao, setDescricao] = useState(null);
+  const [objetivo, setObjetivo] = useState(null);
+  const [justificativa, setJustificativa] = useState(null);
+  const [alternativas, setAlternativas] = useState(null);
   const [dataLegal, setDataLegal] = useState(null);
-  const [comportamentoOffline, setComportamentoOffline] = useState('');
+  const [comportamentoOffline, setComportamentoOffline] = useState(null);
   const [setores, setSetores] = useState([]);
   const [setoresEnvolvidos, setSetoresEnvolvidos] = useState(["TI"]);
   const [sistemas, setSistemas] = useState([]);
   const [sistemasEnvolvidos, setSistemasEnvolvidos] = useState([]);
   const [arquivos, setArquivos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [statusCrm, setStatusCrm] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const [colaboradorCriador, setColaboradorCriador] = useState();
-  const navigate = useNavigate();
-  //Pegar params da url
-  const urlParams = new URLSearchParams(window.location.search);
-  const id = urlParams.get('id');
-  const versao = urlParams.get('versao')
 
+  const navigate = useNavigate();
 
   const handleCreateCrm = async (evt) => {
     setIsLoading(true);
@@ -53,7 +45,7 @@ function Crm({ status, title }) {
     let data = {
       nome: nome,
       necessidade: necessidade,
-      impacto: impacto,
+      impacto: impactoCriacao,
       descricao: descricao,
       objetivo: objetivo,
       justificativa: justificativa,
@@ -114,84 +106,30 @@ function Crm({ status, title }) {
     }
   };
 
-  const getCrm = async (CrmId,CrmVersao,token) => {
-    try {
-      const response = JSON.parse(await crmService.getCrm(CrmId,CrmVersao,token));
-      setCrm(response[0]);
-      setAlternativas(crm.alternativas)
-      setComportamentoOffline(crm.comportamentoOffline)
-      setColaboradorCriador(crm.colaboradorCriador);
-      setDataLegal(crm.dataLegal)
-      setDescricao(crm.descricao)
-      setImpacto(crm.impacto)
-      setJustificativa(crm.justificativa)
-      setNecessidade(crm.necessidade)
-      setNome(crm.nome)
-      setObjetivo(crm.objetivo)
-      setSetoresEnvolvidos(crm.setoresEnvolvidos)
-      setSistemasEnvolvidos(crm.sistemasEnvolvidos)
-    } catch (error) {
-      return error;
-    }
-  };
-
-  const getStatusCrm = () => {
-    console.log(setoresEnvolvidos)
-    const sectorsWithPendingFlag = setoresEnvolvidos.filter(checkPendingFlag)
-    const sectorsWithRejectedFlag = setoresEnvolvidos.filter(checkRejectedFlag) 
-    const sectorsWithApprovedFlag = setoresEnvolvidos.filter(checkApprovedFlag)
-    if(sectorsWithPendingFlag.length > 1){
-      setStatusCrm('pending')
-    }
-  }
-
-  function checkPendingFlag(setorEnvolvido){
-    return setorEnvolvido.flag == 'pendente'
-  }
-
-  function checkRejectedFlag(setorEnvolvido){
-    return setorEnvolvido.flag == 'rejeitado'
-  }
-
-  function checkApprovedFlag(setorEnvolvido){
-    return setorEnvolvido.flag == 'aprovado'
-  }
-
   useEffect(() => {
-   setIsLoading(true)
-   getSectors(localStorage.getItem("@Auth:token"));
-   getSystems(localStorage.getItem("@Auth:token"));
-   getCrm(id,versao,localStorage.getItem("@Auth:token"));
-   getStatusCrm()
-   setIsLoading(false)
-  }, [crm]);
+    getSectors(localStorage.getItem("@Auth:token"));
+    getSystems(localStorage.getItem("@Auth:token"));
+
+    setColaboradorCriador(
+      JSON.parse(localStorage.getItem("@Auth:user")).matricula
+    );
+  }, []);
 
   return (
-    <div>
-      {isLoading 
-        ? (<h1>Teste</h1>)
-        :  (
-          <main className="background_crm">
-      <div className={`statusCrm ${statusCrm}`}></div>
+    <main className="background_crm">
+      <div className={"statusCrm creating"}></div>
       <form className="form_crm">
-        <div className="header_crm">
-          <button className="header_img">
+        <div className="header_crm_creating">
+          <button onClick={handleReturnPage} className="header_img">
             <img src={Vector} alt="Icone de voltar" />
           </button>
-          <h1 className="title-crm">{title}</h1>
-          <button className={`version_background ${statusCrm}`}>
-            <img src={Version} alt="Icone de versionamento" />
-          </button>
+          <CrmInput type="text" onChange={(e) => setNome(e.target.value)} />
         </div>
-
-        
         <CrmInput
           type="text"
           label="A necessidade de *"
           name="necessidade"
           onChange={(e) => setNecessidade(e.target.value)}
-          value={necessidade}
-          readOnly={true}
         />
 
         <div className="sectorsDiv">
@@ -213,8 +151,8 @@ function Crm({ status, title }) {
         <CrmInput
           type="text"
           label="Cujo impacto é *"
-          name="impacto"
-          onChange={(e) => setImpacto(e.target.value)}
+          name="impactoCriacao"
+          onChange={(e) => setImpactoCriacao(e.target.value)}
         />
         <CrmInput
           type="text"
@@ -318,10 +256,7 @@ function Crm({ status, title }) {
         />
       </form>
     </main>
-        )}
-    </div>
-    
   );
 }
 
-export default Crm;
+export default CreateCrm;

@@ -44,6 +44,12 @@
     gap: 0.3rem;
     list-style: none;
 }
+.insideSpanPending{
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 80%;
+
+}
 
 .insideSpan li{
     font-size: 1.4rem;

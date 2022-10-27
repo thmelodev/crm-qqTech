@@ -1,6 +1,7 @@
 import "../css/CrmInput.css";
 
-function CrmInput({ title, label, name, type, onChange }) {
+function CrmInput({ title, label, name, type, onChange,value,readOnly}) {
+
   return (
     <div>
       {title === undefined ? (
@@ -34,6 +35,8 @@ function CrmInput({ title, label, name, type, onChange }) {
               name={name}
               id={name}
               onChange={onChange}
+              value={value}
+              readOnly={readOnly != true ? false : true}
             />
           </div>
         )

@@ -1,0 +1,57 @@
+.div_sector {
+  background-color: #b9cde5;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1.5rem;
+}
+.div_sector label {
+  font-size: 2.2rem;
+  text-transform: uppercase;
+  color: black;
+}
+
+.div_sector input{
+    width: 2.6rem;
+    height: 2.6rem;
+    cursor: pointer;
+    appearance: none;
+    background-color: white;
+    outline: none;
+    border: 0.0625rem solid gray;
+    border-radius: 50%;
+    position: relative;
+    transition: all 600ms ease-in-out;
+}
+
+.div_sector input:checked{
+    background-color: #009028;
+}
+
+
+
+.div_sector input::before {
+  content: "";
+  position: absolute;
+  width: 0.5rem;
+  height: 1.1rem;
+  background-color: none;
+  opacity: 0;
+  transform: rotate(45deg);
+  top: 3.5px;
+  left: 7.6px;
+  transition: all 400ms ease-in-out;
+}
+
+.div_sector input:checked::before{
+    opacity: 1;
+    border-right: 0.4rem solid white;
+    border-bottom: 0.4rem solid white;
+    
+}
+
+.ti{
+  opacity: 0.5;
+}

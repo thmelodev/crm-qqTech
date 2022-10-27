@@ -3,7 +3,7 @@ import "../css/CrmInfo.css";
 
 function Crm({
   crmNumber,
-  title,
+  name,
   status,
   creator,
   rejectors, 
@@ -11,16 +11,17 @@ function Crm({
   approved,
 }) {
   return (
-    <div className="background_crmInfo">
+    <div className="background_crmInfo" >
       <div className={`border ${status}`}></div>
       <div className="crm_info">
         <h1>
-          CRM {crmNumber} - {title}
+          CRM {crmNumber} - {name}
         </h1>
         <div>
           <span className="criador">
             Criador: <span className="insideSpan">{` ${creator}`}</span>
           </span>
+          
           {status === "rejected" ? (
             <div>
             <span className={`list_title`}>Rejeitado por</span>
@@ -33,9 +34,13 @@ function Crm({
           ) : status === "pending" ? (
             <div>
               <span className="list_title">Faltando Aprovação</span>
-              <ul className="insideSpan">
-                {notApproved.map((element) => {
-                  return <li key={element.toString()}>{`${element} \n`}</li>;
+              <ul className="insideSpan insideSpanPending">
+                {notApproved.map((element,i) => {
+                  if(i == notApproved.length - 1){
+                    return <li key={element.toString()}>{`${element}`}</li>;
+                  }else{
+                    return <li key={element.toString()}>{`${element},`}</li>;
+                  }
                 })}
               </ul>
             </div>
@@ -48,7 +53,7 @@ function Crm({
                 })}
               </ul>
             </div>
-          )}
+              )}
         </div>
       </div>
     </div>
