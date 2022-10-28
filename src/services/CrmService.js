@@ -16,7 +16,7 @@ class CrmService {
         Authorization: `bearer ${token}`
       },
     });
-    return JSON.stringify(response[0].data);
+    return JSON.stringify(response.data);
   }
 
   async listRejectedCrm(matricula,token) {

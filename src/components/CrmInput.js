@@ -2,6 +2,7 @@ import "../css/CrmInput.css";
 
 function CrmInput({ title, label, name, type, onChange,value,readOnly}) {
 
+  
   return (
     <div>
       {title === undefined ? (
@@ -11,8 +12,10 @@ function CrmInput({ title, label, name, type, onChange,value,readOnly}) {
               className="title_crm"
               type={type}
               name={name}
+              value={value}
               placeholder="NOME DA CRM"
               onChange={onChange}
+              readOnly={readOnly}
             />
           ) : (
             <input
@@ -20,7 +23,9 @@ function CrmInput({ title, label, name, type, onChange,value,readOnly}) {
               type={type}
               name={name}
               id={name}
+              value={value}
               onChange={onChange}
+              readOnly={readOnly}
             />
           )
         ) : (

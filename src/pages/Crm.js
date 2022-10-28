@@ -5,46 +5,52 @@ import File from "../components/File";
 
 //assets
 import Vector from "../assets/vector.svg";
-import Search from "../assets/search.png";
 import Version from "../assets/version_control.png";
 
 //css
 import "../css/Crm.css";
 
 //hooks
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import System from "../components/System";
 import Sector from "../components/Sector";
 import setorService from "../services/SetorService";
 import sistemaService from "../services/SistemaService";
 import { useNavigate } from "react-router-dom";
 import crmService from "../services/CrmService";
+import Loading from "../components/Loading";
+import SectorInvolved from "../components/SectorInvolved";
+import FlagSelected from "../components/FlagSelected";
 
-function Crm({ status, title }) {
+function Crm() {
   const [crm, setCrm] = useState();
-  const [nome, setNome] = useState('');
-  const [necessidade, setNecessidade] = useState('');
-  const [impacto, setImpacto] = useState('');
-  const [descricao, setDescricao] = useState('');
-  const [objetivo, setObjetivo] = useState('');
-  const [justificativa, setJustificativa] = useState('');
-  const [alternativas, setAlternativas] = useState('');
-  const [dataLegal, setDataLegal] = useState(null);
-  const [comportamentoOffline, setComportamentoOffline] = useState('');
+  const [user, setUser] = useState();
+  const [nome, setNome] = useState("");
+  const [necessidade, setNecessidade] = useState("");
+  const [impacto, setImpacto] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [objetivo, setObjetivo] = useState("");
+  const [justificativa, setJustificativa] = useState("");
+  const [alternativas, setAlternativas] = useState("");
+  const [dataLegal, setDataLegal] = useState("");
+  const [comportamentoOffline, setComportamentoOffline] = useState("");
   const [setores, setSetores] = useState([]);
   const [setoresEnvolvidos, setSetoresEnvolvidos] = useState(["TI"]);
   const [sistemas, setSistemas] = useState([]);
   const [sistemasEnvolvidos, setSistemasEnvolvidos] = useState([]);
   const [arquivos, setArquivos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [statusCrm, setStatusCrm] = useState();
   const [colaboradorCriador, setColaboradorCriador] = useState();
+  const [selectedFlag,setSelectedFlag] = useState(null);
+
+
+  const statusCrm = useRef("");
+
   const navigate = useNavigate();
   //Pegar params da url
   const urlParams = new URLSearchParams(window.location.search);
-  const id = urlParams.get('id');
-  const versao = urlParams.get('versao')
-
+  const id = urlParams.get("id");
+  const versao = urlParams.get("versao");
 
   const handleCreateCrm = async (evt) => {
     setIsLoading(true);
@@ -65,6 +71,7 @@ function Crm({ status, title }) {
       sistemasEnvolvidos: sistemasEnvolvidos,
       documentos: arquivos,
     };
+
     const crmResponse = JSON.parse(
       await crmService.createCrm(data, localStorage.getItem("@Auth:token"))
     );
@@ -96,6 +103,14 @@ function Crm({ status, title }) {
     }
   };
 
+  function handleSectorFlag(sector){
+    if(sector.flag = 'aprovado'){
+
+    }else{
+
+    }
+  }
+
   const getSectors = async (token) => {
     try {
       const response = await setorService.listSectors(token);
@@ -114,213 +129,308 @@ function Crm({ status, title }) {
     }
   };
 
-  const getCrm = async (CrmId,CrmVersao,token) => {
+  const getCrm = async (CrmId, CrmVersao, token) => {
     try {
-      const response = JSON.parse(await crmService.getCrm(CrmId,CrmVersao,token));
+      const response = JSON.parse(
+        await crmService.getCrm(CrmId, CrmVersao, token)
+      );
       setCrm(response[0]);
-      setAlternativas(crm.alternativas)
-      setComportamentoOffline(crm.comportamentoOffline)
-      setColaboradorCriador(crm.colaboradorCriador);
-      setDataLegal(crm.dataLegal)
-      setDescricao(crm.descricao)
-      setImpacto(crm.impacto)
-      setJustificativa(crm.justificativa)
-      setNecessidade(crm.necessidade)
-      setNome(crm.nome)
-      setObjetivo(crm.objetivo)
-      setSetoresEnvolvidos(crm.setoresEnvolvidos)
-      setSistemasEnvolvidos(crm.sistemasEnvolvidos)
+      if (!!response[0].alternativas) {
+        setAlternativas();
+      }
+      if (!!response[0].comportamentoOffline) {
+        setComportamentoOffline(response[0].comportamentoOffline);
+      }
+
+      if (!!response[0].colaboradorCriador) {
+        setColaboradorCriador(response[0].colaboradorCriador);
+      }
+
+      if (!!response[0].dataLegal) {
+        setDataLegal(response[0].dataLegal);
+      }
+
+      if (!!response[0].descricao) {
+        setDescricao(response[0].descricao);
+      }
+
+      if (!!response[0].impacto) {
+        setImpacto(response[0].impacto);
+      }
+
+      if (!!response[0].justificativa) {
+        setJustificativa(response[0].justificativa);
+      }
+
+      if (!!response[0].necessidade) {
+        setNecessidade(response[0].necessidade);
+      }
+
+      if (!!response[0].nome) {
+        setNome(response[0].nome);
+      }
+
+      if (!!response[0].objetivo) {
+        setObjetivo(response[0].objetivo);
+      }
+
+      if (!!response[0].setoresEnvolvidos) {
+        setSetoresEnvolvidos(response[0].setoresEnvolvidos);
+        getStatusCrm(response[0].setoresEnvolvidos);
+      }
+
+      if (!!response[0].sistemasEnvolvidos) {
+        setSistemasEnvolvidos(response[0].sistemasEnvolvidos);
+      }
     } catch (error) {
-      return error;
+      return console.log(error);
     }
   };
 
-  const getStatusCrm = () => {
-    console.log(setoresEnvolvidos)
-    const sectorsWithPendingFlag = setoresEnvolvidos.filter(checkPendingFlag)
-    const sectorsWithRejectedFlag = setoresEnvolvidos.filter(checkRejectedFlag) 
-    const sectorsWithApprovedFlag = setoresEnvolvidos.filter(checkApprovedFlag)
-    if(sectorsWithPendingFlag.length > 1){
-      setStatusCrm('pending')
+  async function getStatusCrm(setoresEnvolvidos) {
+    const sectorsWithPendingFlag = setoresEnvolvidos.filter(checkPendingFlag);
+    const sectorsWithRejectedFlag = setoresEnvolvidos.filter(checkRejectedFlag);
+    const sectorsWithApprovedFlag = setoresEnvolvidos.filter(checkApprovedFlag);
+    if (sectorsWithPendingFlag.length > 1) {
+      statusCrm.current = "pending";
+    } else if (
+      sectorsWithRejectedFlag.length >= 1 &&
+      sectorsWithPendingFlag.length <= 1
+    ) {
+      statusCrm.current = "rejected";
+    } else if (setoresEnvolvidos.length == sectorsWithApprovedFlag.length) {
+      statusCrm.current = "approved";
+    } else {
+      statusCrm.current = "pending";
     }
   }
 
-  function checkPendingFlag(setorEnvolvido){
-    return setorEnvolvido.flag == 'pendente'
+  function checkPendingFlag(setorEnvolvido) {
+    return setorEnvolvido.flag == "pendente";
   }
 
-  function checkRejectedFlag(setorEnvolvido){
-    return setorEnvolvido.flag == 'rejeitado'
+  function checkRejectedFlag(setorEnvolvido) {
+    return setorEnvolvido.flag == "rejeitado";
   }
 
-  function checkApprovedFlag(setorEnvolvido){
-    return setorEnvolvido.flag == 'aprovado'
+  function checkApprovedFlag(setorEnvolvido) {
+    return setorEnvolvido.flag == "aprovado";
+  }
+
+  function sistemasEnvolvidosContainsSistema(sistemaEnvolvido, nomeSistema) {
+    const sistemaEnvolvidoWithSistema = sistemaEnvolvido.filter(
+      (sistemaEnvolvido) => sistemaEnvolvido.nomeSistema == nomeSistema
+    );
+    if (sistemaEnvolvidoWithSistema.length == 1) return true;
+    else return false;
+  }
+
+  async function fetchData() {
+    setIsLoading(true);
+    await getSectors(localStorage.getItem("@Auth:token"));
+    await getSystems(localStorage.getItem("@Auth:token"));
+    await getCrm(id, versao, localStorage.getItem("@Auth:token"));
+    await setIsLoading(false);
+    setUser(JSON.parse(localStorage.getItem("@Auth:user")));
   }
 
   useEffect(() => {
-   setIsLoading(true)
-   getSectors(localStorage.getItem("@Auth:token"));
-   getSystems(localStorage.getItem("@Auth:token"));
-   getCrm(id,versao,localStorage.getItem("@Auth:token"));
-   getStatusCrm()
-   setIsLoading(false)
-  }, [crm]);
+    fetchData();
+  }, []);
 
   return (
-    <div>
-      {isLoading 
-        ? (<h1>Teste</h1>)
-        :  (
-          <main className="background_crm">
-      <div className={`statusCrm ${statusCrm}`}></div>
-      <form className="form_crm">
-        <div className="header_crm">
-          <button className="header_img">
-            <img src={Vector} alt="Icone de voltar" />
-          </button>
-          <h1 className="title-crm">{title}</h1>
-          <button className={`version_background ${statusCrm}`}>
-            <img src={Version} alt="Icone de versionamento" />
-          </button>
-        </div>
+    <main className="background_crm">
+      {!!selectedFlag 
+      ? <FlagSelected/>
+      : null}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className={`statusCrm ${statusCrm.current}`}></div>
+          <form className="form_crm">
+            <div className="header_crm">
+              <button className="header_img" onClick={handleReturnPage}>
+                <img src={Vector} alt="Icone de voltar" />
+              </button>
+              <CrmInput
+                type="text"
+                name="nome"
+                onChange={(e) => setNome(e.target.value)}
+                value={nome}
+                readOnly={true}
+              />
+              <button className={`version_background ${statusCrm.current}`}>
+                <img src={Version} alt="Icone de versionamento" />
+              </button>
+            </div>
 
-        
-        <CrmInput
-          type="text"
-          label="A necessidade de *"
-          name="necessidade"
-          onChange={(e) => setNecessidade(e.target.value)}
-          value={necessidade}
-          readOnly={true}
-        />
+            <CrmInput
+              type="text"
+              label="A necessidade de *"
+              name="necessidade"
+              onChange={(e) => setNecessidade(e.target.value)}
+              value={necessidade}
+              readOnly={true}
+            />
 
-        <div className="sectorsDiv">
-          <span className="sectorDivTitle">setores envolvidos</span>
-          <div className="sectors">
-            {setores.map((setor, i) => {
-              return (
-                <Sector
-                  key={i}
-                  sector={setor.nome}
-                  setoresEnvolvidos={setoresEnvolvidos}
-                  setSetoresEnvolvidos={setSetoresEnvolvidos}
+            <div className="sectorsDiv">
+              <span className="sectorDivTitle">setores envolvidos</span>
+              <div className="sectors">
+                {setoresEnvolvidos.map((setorEnvolvido, i) => {
+                  if (
+                    (user.matricula ==
+                      crm.colaboradorCriador.matricula ||
+                      setorEnvolvido.flag != "pendente" ||
+                      user.setor.nome != setorEnvolvido.nomeSetor)
+                  ) {
+                    return (
+                      <SectorInvolved
+                        key={i}
+                        sector={setorEnvolvido}
+                        isReadOnly={true}
+                      />
+                    );
+                  } else {
+                    return (
+                      <SectorInvolved
+                        key={i}
+                        sector={setorEnvolvido}
+                        isReadOnly={false}
+                      />
+                    );
+                  }
+                })}
+              </div>
+            </div>
+
+            <CrmInput
+              type="text"
+              label="Cujo impacto é *"
+              name="impacto"
+              onChange={(e) => setImpacto(e.target.value)}
+              value={impacto}
+              readOnly={true}
+            />
+            <CrmInput
+              type="text"
+              label="Descrição *"
+              name="descricao"
+              onChange={(e) => setDescricao(e.target.value)}
+              value={descricao}
+              readOnly={true}
+            />
+            <CrmInput
+              type="text"
+              label="Objetivo *"
+              name="objetivo"
+              onChange={(e) => setObjetivo(e.target.value)}
+              value={objetivo}
+              readOnly={true}
+            />
+            <CrmInput
+              type="text"
+              label="Justificativa *"
+              name="justificativa"
+              onChange={(e) => setJustificativa(e.target.value)}
+              value={justificativa}
+              readOnly={true}
+            />
+            <CrmInput
+              type="text"
+              label="Alternativas"
+              name="alternativa"
+              onChange={(e) => setAlternativas(e.target.value)}
+              value={alternativas}
+              readOnly={true}
+            />
+            <span className="label_date">Possui data Legal?</span>
+            <div className="radioDataLegal">
+              <div>
+                <input
+                  type="radio"
+                  name="legalData"
+                  value="yes"
+                  id="yes"
+                  onChange={handleLegalDate}
+                  defaultChecked
                 />
-              );
-            })}
-          </div>
-        </div>
-
-        <CrmInput
-          type="text"
-          label="Cujo impacto é *"
-          name="impacto"
-          onChange={(e) => setImpacto(e.target.value)}
-        />
-        <CrmInput
-          type="text"
-          label="Descrição *"
-          name="descricao"
-          onChange={(e) => setDescricao(e.target.value)}
-        />
-        <CrmInput
-          type="text"
-          label="Objetivo *"
-          name="objetivo"
-          onChange={(e) => setObjetivo(e.target.value)}
-        />
-        <CrmInput
-          type="text"
-          label="Justificativa *"
-          name="justificativa"
-          onChange={(e) => setJustificativa(e.target.value)}
-        />
-        <CrmInput
-          type="text"
-          label="Alternativas"
-          name="alternativa"
-          onChange={(e) => setAlternativas(e.target.value)}
-        />
-        <span className="label_date">Possui data Legal?</span>
-        <div className="radioDataLegal">
-          <div>
-            <input
-              type="radio"
-              name="legalData"
-              value="yes"
-              id="yes"
-              onChange={handleLegalDate}
-            />
-            <label htmlFor="yes">Sim</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              name="legalData"
-              value="no"
-              id="no"
-              onChange={handleLegalDate}
-            />
-            <label htmlFor="no">Não</label>
-          </div>
-        </div>
-        <div id="date">
-          <CrmInput
-            type="date"
-            name="dataLegal"
-            onChange={(e) => setDataLegal(e.target.value)}
-          />
-        </div>
-        <div className="sectorsDiv">
-          <span className="sectorDivTitle">sistemas envolvidos</span>
-          <div className="sectors">
-            {sistemas.map((sistema, i) => {
-              return (
-                <System
-                  key={i}
-                  system={sistema.nome}
-                  sistemasEnvolvidos={sistemasEnvolvidos}
-                  setSistemasEnvolvidos={setSistemasEnvolvidos}
+                <label htmlFor="yes">Sim</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  name="legalData"
+                  value="no"
+                  id="no"
+                  onChange={handleLegalDate}
                 />
-              );
-            })}
-          </div>
-        </div>
+                <label htmlFor="no">Não</label>
+              </div>
+            </div>
+            <div id="date">
+              <CrmInput
+                type="date"
+                name="dataLegal"
+                onChange={(e) => setDataLegal(e.target.value)}
+                value={dataLegal}
+              />
+            </div>
+            <div className="sectorsDiv">
+              <span className="sectorDivTitle">sistemas envolvidos</span>
+              <div className="sectors">
+                {sistemas.map((sistema, i) => {
+                  return (
+                    <System
+                      key={i}
+                      system={sistema.nome}
+                      sistemasEnvolvidos={sistemasEnvolvidos}
+                      setSistemasEnvolvidos={setSistemasEnvolvidos}
+                      defaultChecked={sistemasEnvolvidosContainsSistema(
+                        sistemasEnvolvidos,
+                        sistema.nome
+                      )}
+                    />
+                  );
+                })}
+              </div>
+            </div>
 
-        <CrmInput
-          type="text"
-          label="Comportamento Offline"
-          name="comportamentoOffline"
-          onChange={(e) => setComportamentoOffline(e.target.value)}
-        />
-
-        <div className="filesDiv">
-          <span className="filesDiv_title">Arquivos</span>
-          <div className="files">
-            {arquivos.map((file, i) => {
-              return <File key={i} file={file} />;
-            })}
-          </div>
-          <div className="filesAdd" value="adicionar arquivos">
-            <span>ADICIONAR ARQUIVOS</span>
-            <FileUpload
-              files={arquivos}
-              setFiles={setArquivos}
-              className="file_upload"
+            <CrmInput
+              type="text"
+              label="Comportamento Offline"
+              name="comportamentoOffline"
+              onChange={(e) => setComportamentoOffline(e.target.value)}
+              value={comportamentoOffline}
             />
-          </div>
-        </div>
 
-        <input
-          className="submit"
-          type="submit"
-          onClick={handleCreateCrm}
-          value="enviar crm"
-        />
-      </form>
+            <div className="filesDiv">
+              <span className="filesDiv_title">Arquivos</span>
+              <div className="files">
+                {arquivos.map((file, i) => {
+                  return <File key={i} file={file} />;
+                })}
+              </div>
+              <div className="filesAdd" value="adicionar arquivos">
+                <span>ADICIONAR ARQUIVOS</span>
+                <FileUpload
+                  files={arquivos}
+                  setFiles={setArquivos}
+                  className="file_upload"
+                />
+              </div>
+            </div>
+
+            <input
+              className="submit"
+              type="submit"
+              onClick={handleCreateCrm}
+              value="enviar crm"
+            />
+          </form>
+        </>
+      )}
     </main>
-        )}
-    </div>
-    
   );
 }
 

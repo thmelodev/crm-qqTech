@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         response.data.access_token
       );
       localStorage.setItem("@Auth:token", response.data.access_token);
-      localStorage.setItem("@Auth:user", JSON.stringify(colaborador.data));
+      localStorage.setItem("@Auth:user", colaborador);
     } catch (e) {
       alert("Usuário ou senha incorreta");
     }

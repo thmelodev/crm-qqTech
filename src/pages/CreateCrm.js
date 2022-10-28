@@ -41,8 +41,7 @@ function CreateCrm() {
   const handleCreateCrm = async (evt) => {
     setIsLoading(true);
     evt.preventDefault();
-
-    let data = {
+    const data = {
       nome: nome,
       necessidade: necessidade,
       impacto: impactoCriacao,
@@ -59,7 +58,7 @@ function CreateCrm() {
     };
     const crmResponse = JSON.parse(
       await crmService.createCrm(data, localStorage.getItem("@Auth:token"))
-    );
+    );  
     setIsLoading(false);
     if (crmResponse.message === "CADASTRADA") {
       alert("Crm cadastrada com sucesso");
@@ -105,11 +104,10 @@ function CreateCrm() {
       return error;
     }
   };
-
+  
   useEffect(() => {
     getSectors(localStorage.getItem("@Auth:token"));
     getSystems(localStorage.getItem("@Auth:token"));
-
     setColaboradorCriador(
       JSON.parse(localStorage.getItem("@Auth:user")).matricula
     );

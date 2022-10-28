@@ -1,8 +1,8 @@
 import '../css/SectorAndSystem.css'
 
-function Sector({sector,setoresEnvolvidos, setSetoresEnvolvidos}) {
+function Sector({sector,setoresEnvolvidos, setSetoresEnvolvidos,defaultChecked}) {
     
-  function teste() {
+  function check() {
     const checkbox = document.getElementById(`${sector}`);
     if(checkbox.checked){
       setSetoresEnvolvidos([...setoresEnvolvidos,sector])
@@ -17,7 +17,7 @@ function Sector({sector,setoresEnvolvidos, setSetoresEnvolvidos}) {
     <div className='div_sector'>
       {sector == 'TI'
       ?(<input className='ti' id={sector} type='checkbox' value={sector} defaultChecked onClick={readOnly}/>)
-      : (<input onChange={teste} id={sector} type='checkbox' value={sector}/>)}
+      : (<input onChange={check} id={sector} type='checkbox' value={sector} defaultChecked={defaultChecked}/>  )}
       <label htmlFor={sector}>{sector}</label>
     </div>
   );

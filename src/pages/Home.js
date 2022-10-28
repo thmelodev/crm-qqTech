@@ -36,7 +36,6 @@ function Home() {
     } else {
       getApprovedCrms(userJson.matricula, localStorage.getItem("@Auth:token"));
     }
-
     setIsLoading(false);
   }, [statusSelected]);
 
@@ -176,6 +175,7 @@ function Home() {
             <h1 className="notCrm">Nenhuma CRM aprovada foi encontrada</h1>
           ) : (
             approvedCrms.map((crm) => {
+              console.log(crm)
               return (
                 <Link to={`/crm?id=${crm.id}&versao=${crm.versao}`} style={{ textDecoration: "none" }} key={crm.id}>
                   <CrmInfo

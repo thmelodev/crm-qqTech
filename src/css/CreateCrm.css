@@ -80,14 +80,9 @@
   margin-bottom: 3rem;
 }
 
-#date {
-  display: none;
-}
-
 .radioDataLegal {
   display: flex;
   gap: 8rem;
-  margin-bottom: 3rem;
 }
 
 .radioDataLegal input {

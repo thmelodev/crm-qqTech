@@ -1,6 +1,6 @@
 import '../css/SectorAndSystem.css'
 
-function System({system,sistemasEnvolvidos, setSistemasEnvolvidos}) {
+function System({system,sistemasEnvolvidos, setSistemasEnvolvidos,defaultChecked}) {
     
   function teste() {
     const checkbox = document.getElementById(`${system}`);
@@ -13,7 +13,7 @@ function System({system,sistemasEnvolvidos, setSistemasEnvolvidos}) {
 
   return (
     <div className='div_sector'>
-      <input onChange={teste} id={system} type='checkbox' value={system}/>
+      <input onChange={teste} id={system} type='checkbox' value={system} defaultChecked={defaultChecked}/>
       <label htmlFor={system}>{system}</label>
     </div>
   );

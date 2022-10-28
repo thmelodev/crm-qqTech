@@ -1,4 +1,3 @@
-import { render } from "react-dom";
 import "../css/CrmInfo.css";
 
 function Crm({
@@ -10,6 +9,7 @@ function Crm({
   notApproved,
   approved,
 }) {
+  
   return (
     <div className="background_crmInfo" >
       <div className={`border ${status}`}></div>
@@ -26,8 +26,8 @@ function Crm({
             <div>
             <span className={`list_title`}>Rejeitado por</span>
             <ul className="insideSpan">
-              {rejectors.map((element) => {
-                return <li key={element.toString()}>{`${element} \n`}</li>;
+              {rejectors.map((rejector,i) => {
+                return <li key={i}>{rejector}</li>;
               })}
             </ul>
           </div>
@@ -48,8 +48,9 @@ function Crm({
             <div>
               <span className="list_title">Aprovado por</span>
               <ul className="insideSpan">
-                {approved.map((element) => {
-                  return <li key={element.toString()}>{`${element} \n`}</li>;
+                {approved.map((approver,i) => {
+                  console.log(approved)
+                  return <li key={i}>{`${approver}`}</li>;
                 })}
               </ul>
             </div>

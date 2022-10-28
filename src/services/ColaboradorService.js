@@ -3,9 +3,9 @@ import { url_base } from "../routes";
 
 class ColaboradorService {
 
-  async findOne(username,token) {
+  async findOne(matricula,token) {
     const response = await axios({
-      url: `${url_base}/colaborador?matricula=${username}`,
+      url: `${url_base}/colaborador?matricula=${matricula}`,
       method: "GET",
       timeout: "5000",
       headers: {
@@ -13,7 +13,8 @@ class ColaboradorService {
         Authorization: `bearer ${token}`
       },
     });
-    return response;
+    //console.log(response)
+    return JSON.stringify(response.data);
   }
 }
 const colaboradorService = new ColaboradorService();
