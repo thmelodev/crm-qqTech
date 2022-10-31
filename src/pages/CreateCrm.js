@@ -60,7 +60,7 @@ function CreateCrm() {
       await crmService.createCrm(data, localStorage.getItem("@Auth:token"))
     );  
     setIsLoading(false);
-    if (crmResponse.message === "CADASTRADA") {
+    if (crmResponse.message === "SUCESSO") {
       alert("Crm cadastrada com sucesso");
       navigate("/home");
     } else {

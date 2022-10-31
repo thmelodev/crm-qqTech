@@ -1,0 +1,103 @@
+.flagSelected_background{
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    z-index: 1;
+    position: fixed;
+    background-color: black;
+    opacity: 0.6;
+}
+
+.flagSelected_container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 2;
+}
+
+.flagSelected_box{
+    display: flex;
+    flex-direction: column;
+    background-color: #29292E;
+    border-radius: 2rem;
+    box-shadow: 0px 0px 1rem rgba(255, 255, 255, 0.4);
+    width: 50rem;
+    height: 40rem;
+    padding: 4rem 6rem;
+}
+
+.flagSelected_header{
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5rem;
+}
+
+.flagSelected_header img{
+    position: absolute;
+    left: 0;
+    width: 1.6rem;
+}
+
+.flagSelected_header h1{
+    font-size: 2rem;
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 70%;
+}
+
+.flagSelected_containerButtons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.flagSelected_button{
+    width: 15rem;
+    height: 7rem;
+    margin: auto;
+
+    color: white;
+    text-transform: uppercase;
+    font-size: 2rem;
+    
+    border-color: transparent;
+    border-radius: 3rem;
+}
+
+.flagSelected_button[value='sim']{
+    background-color: #009128;
+}
+
+.flagSelected_button[value='não']{
+    background-color: #BC3315;
+}
+
+.flagSelected_textarea{
+    font-size: 1.7rem;
+    color: white;
+    padding: 0.7rem;
+    border: groove white 0.1rem;
+    background-color: transparent;
+    margin-bottom: 3rem;
+    min-height: 15rem;
+}
+
+.flagSelected_rejeitar{
+    width: 23rem;
+    height: 10rem;
+    margin: 0 auto;
+
+    color: white;
+    text-transform: uppercase;
+    font-size: 2rem;
+    background-color: #E0BE07;
+    border-color: transparent;
+    border-radius: 3rem;
+}

@@ -1,66 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../css/SectorInvolved.css";
+import colaboradorService from "../services/ColaboradorService";
+import LoadingComponents from "./LoadingComponents";
 
-
-function SectorInvolved({ sector,isReadOnly, handleFlag}) {
+function SectorInvolved({ sector, isReadOnly, setSelectedFlag, user }) {
   const ifFlagApproved = sector.flag == "aprovado" ? true : false;
   const ifFlagRejected = sector.flag == "rejeitado" ? true : false;
+  const [colaboradorName, setColaboradorName] = useState("");
 
-  const handleFlagAprovado = () => {
-    const radioRejeitado = document.getElementsByClassName(
-      `checkRejeitado class_${sector.nomeSetor}`
-    )[0];
-    radioRejeitado.checked = false;
+  async function getColaboradorName() {
+    const colaborador = JSON.parse(
+      await colaboradorService.findOne(
+        sector.matriculaColaborador,
+        localStorage.getItem("@Auth:token")
+      )
+    );
+    setColaboradorName(`${colaborador.nome} ${colaborador.sobrenome}`);
+  }
+
+  const handleFlagAprovado = (e) => {
     sector.flag = "aprovado";
+    sector.matriculaColaborador = user.matricula;
+    if (sector.flag != "pendente") getColaboradorName();
+    setSelectedFlag("aprovado");
   };
 
-  const handleFlagRejeitado = () => {
-    const radioAprovado = document.getElementsByClassName(
+  const handleFlagRejeitado = (e) => {
+    sector.flag = "rejeitado";
+    sector.matriculaColaborador = user.matricula;
+    if (sector.flag != "pendente") getColaboradorName();
+    setSelectedFlag("rejeitado");
+  };
+
+  function fixCheckBox() {
+
+    const divCheckBox = document.getElementsByClassName(
+      `div_sectorInvolved class_${sector.nomeSetor}`)[0];
+    const approvedCheckBox = document.getElementsByClassName(
       `checkAprovado class_${sector.nomeSetor}`
     )[0];
-    radioAprovado.checked = false;
-    sector.flag = "rejeitado";
-  };
+    const rejectedCheckBox = document.getElementsByClassName(
+      `checkRejeitado class_${sector.nomeSetor}`
+    )[0];
+
+    if (isReadOnly) {
+      approvedCheckBox.disabled = true;
+      approvedCheckBox.style.cursor = "default"
+    
+      rejectedCheckBox.disabled = true;
+      rejectedCheckBox.style.cursor = "default"
+
+      divCheckBox.style.opacity = 0.7
+    }
+
+    if (sector.flag != "pendente") {
+      getColaboradorName();
+    }
+
+    if (sector.flag == "aprovado") {
+      approvedCheckBox.checked = true;
+    } else if (sector.flag == "rejeitado") {
+      rejectedCheckBox.checked = true;
+    }
+  }
+
+  useEffect(() => {
+    fixCheckBox();
+  }, []);
 
   return (
-    <div className="div_sectorInvolved">
+    <div className={`div_sectorInvolved class_${sector.nomeSetor}`}>
       {ifFlagApproved ? (
         <>
-          <label>{`${sector.nomeSetor} -`}</label>
+          <label>{`${sector.nomeSetor} - ${colaboradorName}`}</label>
           <div>
             <input
               className={`checkAprovado class_${sector.nomeSetor}`}
               type="radio"
               name={`flagSetor_${sector.nomeSetor}`}
               value="aprovado"
-              disabled
-              onChange={handleFlagAprovado}
-              defaultChecked
-            />
-          </div>
-          <div>
-            <input
-              className={`checkRejeitado class_${sector.nomeSetor}`}
-              type="radio"
-              name={`flagSetor_${sector.nomeSetor}`}
-              value="rejeitado"
-              disabled
-              onChange={handleFlagRejeitado}
-            />
-          </div>
-        </>
-      ) : 
-        ifFlagRejected 
-        ? (
-          <>
-          <label>{`${sector.nomeSetor} - `}</label>
-          <div>
-            <input
-              className={`checkAprovado class_${sector.nomeSetor}`}
-              type="radio"
-              name={`flagSetor_${sector.nomeSetor}`}
-              value="aprovado"
-              disabled
               onChange={handleFlagAprovado}
             />
           </div>
@@ -70,17 +88,34 @@ function SectorInvolved({ sector,isReadOnly, handleFlag}) {
               type="radio"
               name={`flagSetor_${sector.nomeSetor}`}
               value="rejeitado"
-              disabled
               onChange={handleFlagRejeitado}
-              defaultChecked
             />
           </div>
         </>
-      )
-        : 
-        isReadOnly 
-        ?  (
-          <>
+      ) : ifFlagRejected ? (
+        <>
+          <label>{`${sector.nomeSetor} - ${colaboradorName}`}</label>
+          <div>
+            <input
+              className={`checkAprovado class_${sector.nomeSetor}`}
+              type="radio"
+              name={`flagSetor_${sector.nomeSetor}`}
+              value="aprovado"
+              onChange={handleFlagAprovado}
+            />
+          </div>
+          <div>
+            <input
+              className={`checkRejeitado class_${sector.nomeSetor}`}
+              type="radio"
+              name={`flagSetor_${sector.nomeSetor}`}
+              value="rejeitado"
+              onChange={handleFlagRejeitado}
+            />
+          </div>
+        </>
+      ) : isReadOnly ? (
+        <>
           <label>{`${sector.nomeSetor} `}</label>
           <div>
             <input
@@ -89,7 +124,6 @@ function SectorInvolved({ sector,isReadOnly, handleFlag}) {
               name={`flagSetor_${sector.nomeSetor}`}
               value="aprovado"
               disabled
-              onChange={handleFlagAprovado}
             />
           </div>
           <div>
@@ -99,12 +133,10 @@ function SectorInvolved({ sector,isReadOnly, handleFlag}) {
               name={`flagSetor_${sector.nomeSetor}`}
               value="rejeitado"
               disabled
-              onChange={handleFlagRejeitado}
             />
           </div>
         </>
-        )
-      :(
+      ) : (
         <>
           <label>{`${sector.nomeSetor} `}</label>
           <div>
@@ -127,7 +159,6 @@ function SectorInvolved({ sector,isReadOnly, handleFlag}) {
           </div>
         </>
       )}
-      
     </div>
   );
 }

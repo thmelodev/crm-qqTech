@@ -49,7 +49,6 @@ function Crm({
               <span className="list_title">Aprovado por</span>
               <ul className="insideSpan">
                 {approved.map((approver,i) => {
-                  console.log(approved)
                   return <li key={i}>{`${approver}`}</li>;
                 })}
               </ul>

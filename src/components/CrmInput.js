@@ -15,7 +15,7 @@ function CrmInput({ title, label, name, type, onChange,value,readOnly}) {
               value={value}
               placeholder="NOME DA CRM"
               onChange={onChange}
-              readOnly={readOnly}
+              readOnly={readOnly != true ? false : true}
             />
           ) : (
             <input
@@ -25,7 +25,7 @@ function CrmInput({ title, label, name, type, onChange,value,readOnly}) {
               id={name}
               value={value}
               onChange={onChange}
-              readOnly={readOnly}
+              readOnly={readOnly != true ? false : true}
             />
           )
         ) : (

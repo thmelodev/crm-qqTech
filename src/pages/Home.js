@@ -60,6 +60,7 @@ function Home() {
   const getApprovedCrms = async (matricula, token) => {
     try {
       const response = await crmService.listApprovedCrm(matricula, token);
+      console.log(JSON.parse(response));
       setApprovedCrms(JSON.parse(response));
     } catch (error) {
       return error;
@@ -175,7 +176,6 @@ function Home() {
             <h1 className="notCrm">Nenhuma CRM aprovada foi encontrada</h1>
           ) : (
             approvedCrms.map((crm) => {
-              console.log(crm)
               return (
                 <Link to={`/crm?id=${crm.id}&versao=${crm.versao}`} style={{ textDecoration: "none" }} key={crm.id}>
                   <CrmInfo
