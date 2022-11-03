@@ -26,7 +26,7 @@
     border-radius: 2rem;
     box-shadow: 0px 0px 1rem rgba(255, 255, 255, 0.4);
     width: 50rem;
-    height: 40rem;
+    height: 45rem;
     padding: 4rem 6rem;
 }
 
@@ -35,7 +35,7 @@
     position: relative;
     justify-content: center;
     align-items: center;
-    margin-bottom: 5rem;
+    margin-bottom: 3rem;
 }
 
 .flagSelected_header img{
@@ -49,6 +49,86 @@
     text-transform: uppercase;
     text-align: center;
     max-width: 70%;
+}
+
+.setComplexidade{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.setComplexidade h1{
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+.divRadioComplexidade{
+    display: flex; 
+    width: 100%;
+    margin-bottom: 2rem;
+    justify-content: space-around;
+}
+
+.divRadioComplexidade div{
+    display: flex; 
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.divRadioComplexidade label {
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    color: rgb(255, 255, 255);
+}
+
+.divRadioComplexidade input{
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    appearance: none;
+    background-color: white;
+    outline: none;
+    border: 0.0625rem solid gray;
+    border-radius: 50%;
+    position: relative;
+    transition: all 600ms ease-in-out;
+}
+
+.divRadioComplexidade input:checked{
+    background-color: #009028;
+}
+
+.divRadioComplexidade input::before {
+    content: "";
+    position: absolute;
+    width: 0.4rem;
+    height: 0.8rem;
+    background-color: none;
+    opacity: 0;
+    transform: rotate(45deg);
+    top: 2px;
+    left: 5px;
+    transition: all 400ms ease-in-out;
+  }
+
+  .divRadioComplexidade input:checked::before{
+    opacity: 1;
+    border-right: 0.4rem solid white;
+    border-bottom: 0.4rem solid white;
+}
+
+.SetImpactoMudanca{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.SetImpactoMudanca textarea{
+    min-height: 10rem;
+    font-size: 1.8rem;
 }
 
 .flagSelected_containerButtons{
@@ -101,3 +181,4 @@
     border-color: transparent;
     border-radius: 3rem;
 }
+

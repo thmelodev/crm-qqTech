@@ -15,7 +15,7 @@ import React, { useEffect, useRef, useState } from "react";
 import System from "../components/System";
 import setorService from "../services/SetorService";
 import sistemaService from "../services/SistemaService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import crmService from "../services/CrmService";
 import Loading from "../components/Loading";
 import SectorInvolved from "../components/SectorInvolved";
@@ -35,19 +35,23 @@ function Crm() {
   const [alternativas, setAlternativas] = useState("");
   const [dataLegal, setDataLegal] = useState("");
   const [comportamentoOffline, setComportamentoOffline] = useState("");
-  const [setores, setSetores] = useState([]);
   const [setoresEnvolvidos, setSetoresEnvolvidos] = useState([]);
-  const [addSetoresEnvolvidos, setAddSetoresEnvolvidos] = useState([]);
   const [sistemas, setSistemas] = useState([]);
   const [sistemasEnvolvidos, setSistemasEnvolvidos] = useState([]);
   const [arquivos, setArquivos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [colaboradorCriador, setColaboradorCriador] = useState("");
-  const [selectedFlag, setSelectedFlag] = useState("pendente");
   const [motivoRejeicao, setMotivoRejeicao] = useState("");
+  const [complexidade, setComplexidade] = useState()
+
+  
+  const [setores, setSetores] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedFlag, setSelectedFlag] = useState("pendente");
+  const [addSetoresEnvolvidos, setAddSetoresEnvolvidos] = useState([]);
   const [canEdit, setCanEdit] = useState("")
   const statusCrm = useRef("");
-
+  const sectorsWithPendingFlag = setoresEnvolvidos.filter(checkPendingFlag);
+  
   async function userIsCreadorAndIsNotPendingAndCrmIsMaxVersion(crmId,crmVersao,matriculaColaboradorCriador,crmSetoresEnvolvidos) {
     const maxVersion = JSON.parse(
       await crmService.maxVersion(crmId, localStorage.getItem("@Auth:token"))
@@ -176,11 +180,14 @@ function Crm() {
     const setorEnvolvido = setoresEnvolvidos.filter(
       (setor) => setor.nomeSetor == user.setor.nome
     );
+    
 
     let data = {
       id: crm.id,
       versao: crm.versao,
       setorEnvolvido: setorEnvolvido[0],
+      complexidade: complexidade,
+      impactoMudanca: impactoMudanca
     };
 
     const crmResponse = JSON.parse(
@@ -346,7 +353,6 @@ function Crm() {
 
   return (
     <main className="background_crm">
-      {console.log(impactoMudanca)}
       {selectedFlag == "rejeitado" || selectedFlag == "aprovado" ? (
         <FlagSelected
           flagSelected={selectedFlag}
@@ -359,6 +365,7 @@ function Crm() {
           handleApproveCrm={handleApproveCrm}
           impactoMudanca={impactoMudanca}
           setImpactoMudanca={setImpactoMudanca}
+          setComplexidade={setComplexidade}
         />
       ) : null}
       {isLoading ? (
@@ -388,10 +395,11 @@ function Crm() {
                   readOnly={false}
                 />
               )}
-
-              <button className={`version_background ${statusCrm.current}`}>
-                <img src={Version} alt="Icone de versionamento" />
-              </button>
+              <Link to={`/versions?id=${crm.id}`}>
+                <button className={`version_background ${statusCrm.current}`}>
+                  <img src={Version} alt="Icone de versionamento" />
+                </button>
+              </Link>
             </div>
             {!canEdit ? (
               <CrmInput
@@ -421,8 +429,9 @@ function Crm() {
                     user.matricula == crm.colaboradorCriador.matricula ||
                     setorEnvolvido.flag != "pendente" ||
                     user.setor.nome != setorEnvolvido.nomeSetor ||
+                    getStatusCrm(setoresEnvolvidos) != 'pending' ||
                     (setorEnvolvido.nomeSetor == "TI" &&
-                      statusCrm.current != "pending")
+                      sectorsWithPendingFlag.length != 1)
                   ) {
                     return (
                       <SectorInvolved

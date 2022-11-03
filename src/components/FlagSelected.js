@@ -14,6 +14,7 @@ function FlagSelected({
   handleApproveCrm,
   impactoMudanca,
   setImpactoMudanca,
+  setComplexidade
 }) {
   const userSector = setoresEnvolvidos.filter(
     (setorEnvolvido) => setorEnvolvido.nomeSetor == user.setor.nome
@@ -76,28 +77,26 @@ function FlagSelected({
               <>
                 <div className="setComplexidade">
                   <h1>Complexidade</h1>
-                  <div>
-                    <input type="checkbox" value="Alta" name="complexidade" />
-                    <label>Alta</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" value="Media" name="complexidade" />
-                    <label>Media</label>
-                  </div>
-                  <div>
-                    <input type="checkbox" value="Baixa" name="complexidade" />
-                    <label>Baixa</label>
-                  </div>
-                  <div>
-                    <input
-                      type="checkbox"
-                      value="Muito Baixa"
-                      name="complexidade"
-                    />
-                    <label>Muito Baixa</label>
+                  <div className="divRadioComplexidade">
+                    <div>
+                      <input type="radio" value="Alta" name="complexidade" onChange={(e) => setComplexidade(e.target.value)}/>
+                      <label>Alta</label>
+                    </div>
+                    <div>
+                      <input type="radio" value="Media" name="complexidade" onChange={(e) => setComplexidade(e.target.value)}/>
+                      <label>Media</label>
+                    </div>
+                    <div>
+                      <input type="radio" value="Baixa" name="complexidade" onChange={(e) => setComplexidade(e.target.value)} />
+                      <label>Baixa</label>
+                    </div>
+                    <div>
+                      <input
+                        type="radio" value="Muito Baixa" name="complexidade" onChange={(e) => setComplexidade(e.target.value)} />
+                      <label>Muito Baixa</label>
+                    </div>
                   </div>
                 </div>
-
                 <div className="SetImpactoMudanca">
                   <label className="label_crm" htmlFor="impactoMudanca">
                     impacto da mudança
