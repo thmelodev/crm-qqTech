@@ -20,6 +20,7 @@ import crmService from "../services/CrmService";
 import Loading from "../components/Loading";
 import SectorInvolved from "../components/SectorInvolved";
 import FlagSelected from "../components/FlagSelected";
+import Sector from "../components/Sector";
 
 function Crm() {
   const [crm, setCrm] = useState([]);
@@ -27,6 +28,7 @@ function Crm() {
   const [nome, setNome] = useState("");
   const [necessidade, setNecessidade] = useState("");
   const [impacto, setImpacto] = useState("");
+  const [impactoMudanca, setImpactoMudanca] = useState("");
   const [descricao, setDescricao] = useState("");
   const [objetivo, setObjetivo] = useState("");
   const [justificativa, setJustificativa] = useState("");
@@ -34,26 +36,37 @@ function Crm() {
   const [dataLegal, setDataLegal] = useState("");
   const [comportamentoOffline, setComportamentoOffline] = useState("");
   const [setores, setSetores] = useState([]);
-  const [setoresEnvolvidos, setSetoresEnvolvidos] = useState(["TI"]);
+  const [setoresEnvolvidos, setSetoresEnvolvidos] = useState([]);
+  const [addSetoresEnvolvidos, setAddSetoresEnvolvidos] = useState([]);
   const [sistemas, setSistemas] = useState([]);
   const [sistemasEnvolvidos, setSistemasEnvolvidos] = useState([]);
   const [arquivos, setArquivos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [colaboradorCriador, setColaboradorCriador] = useState("");
-  const [selectedFlag,setSelectedFlag] = useState("pendente");
-  const [motivoRejeicao, setMotivoRejeicao] = useState('');
+  const [selectedFlag, setSelectedFlag] = useState("pendente");
+  const [motivoRejeicao, setMotivoRejeicao] = useState("");
+  const [canEdit, setCanEdit] = useState("")
   const statusCrm = useRef("");
 
-  function userIsNotCreadorOrIsPending(){
-    statusCrm.current = getStatusCrm(setoresEnvolvidos)
-    if(!(crm.colaboradorCriador.matricula == user.matricula) || statusCrm.current == "pending" ) return true
-    else return false
-  } 
-
-  function CrmIsPending(){
-    statusCrm.current = getStatusCrm(setoresEnvolvidos)
-    if(statusCrm.current == "pending") return true
-    else return false
+  async function userIsCreadorAndIsNotPendingAndCrmIsMaxVersion(crmId,crmVersao,matriculaColaboradorCriador,crmSetoresEnvolvidos) {
+    const maxVersion = JSON.parse(
+      await crmService.maxVersion(crmId, localStorage.getItem("@Auth:token"))
+    );
+    const MatriculaUser = JSON.parse(localStorage.getItem("@Auth:user")).matricula
+    if (
+      matriculaColaboradorCriador == MatriculaUser &&
+      getStatusCrm(crmSetoresEnvolvidos) != "pending" &&
+      crmVersao == maxVersion.versao
+    )
+      setCanEdit(true);
+    else setCanEdit(false);
+  }
+ 
+  function filterSectores(crmSetoresEnvolvidos,allSetores){
+    for(const sector of crmSetoresEnvolvidos){
+      allSetores = allSetores.filter((setor) => setor.nome != sector.nomeSetor)
+    }
+    setSetores(allSetores)
   }
 
   const navigate = useNavigate();
@@ -95,52 +108,56 @@ function Crm() {
   };
 
   const handleUpdateCrm = async (evt) => {
+    setIsLoading(true);
     evt.preventDefault();
-    if(userIsNotCreadorOrIsPending()){
-      alert('Você não tem autorização de atualizar a CRM ou ela está pendente no momento')
-    }else{
-      setIsLoading(true);
+    if (true) {
+      let data = {
+        id: crm.id,
+        versao: crm.versao,
+        nome: nome,
+        necessidade: necessidade,
+        impacto: impacto,
+        descricao: descricao,
+        objetivo: objetivo,
+        justificativa: justificativa,
+        alternativas: alternativas,
+        dataLegal: dataLegal,
+        comportamentoOffline: comportamentoOffline,
+        colaboradorCriador: colaboradorCriador,
+        setoresEnvolvidos: setoresEnvolvidos.concat(addSetoresEnvolvidos),
+        sistemasEnvolvidos: sistemasEnvolvidos,
+        documentos: arquivos,
+      };
 
-    let data = {
-      id: crm.id,
-      versao:crm.versao,
-      nome: nome,
-      necessidade: necessidade,
-      impacto: impacto,
-      descricao: descricao,
-      objetivo: objetivo,
-      justificativa: justificativa,
-      alternativas: alternativas,
-      dataLegal: dataLegal,
-      comportamentoOffline: comportamentoOffline,
-      colaboradorCriador: colaboradorCriador,
-      setoresEnvolvidos: setoresEnvolvidos,
-      sistemasEnvolvidos: sistemasEnvolvidos,
-      documentos: arquivos,
-    };
+      const crmResponse = JSON.parse(
+        await crmService.updateCrm(data, localStorage.getItem("@Auth:token"))
+      );
+      setIsLoading(false);
+      if (crmResponse.message === "SUCESSO") {
+        alert("Crm atualizada com sucesso");
+        navigate("/home");
+      } else {
+        alert(
+          "Você não tem autorização de atualizar a CRM ou ela está pendente no momento"
+        );
+        setAddSetoresEnvolvidos([])
+      }
 
-    const crmResponse = JSON.parse(
-      await crmService.updateCrm(data, localStorage.getItem("@Auth:token"))
-    );
-    setIsLoading(false);
-    if (crmResponse.message === "SUCESSO") {
-      alert("Crm atualizada com sucesso");
-      navigate("/home");
+      
     } else {
-      alert("Erro ao atualizar CRM, por favor entre em contato com o suporte");
-    }
 
     }
-    
   };
 
   const handleRejectCrm = async () => {
-    const setorEnvolvido = setoresEnvolvidos.filter((setor) => setor.nomeSetor == user.setor.nome)
+    const setorEnvolvido = setoresEnvolvidos.filter(
+      (setor) => setor.nomeSetor == user.setor.nome
+    );
 
     let data = {
       id: crm.id,
       versao: crm.versao,
-      setorEnvolvido: setorEnvolvido[0]
+      setorEnvolvido: setorEnvolvido[0],
     };
 
     const crmResponse = JSON.parse(
@@ -153,7 +170,30 @@ function Crm() {
     } else {
       alert("Erro ao rejeitar CRM, por favor entre em contato com o suporte");
     }
-  }
+  };
+
+  const handleApproveCrm = async () => {
+    const setorEnvolvido = setoresEnvolvidos.filter(
+      (setor) => setor.nomeSetor == user.setor.nome
+    );
+
+    let data = {
+      id: crm.id,
+      versao: crm.versao,
+      setorEnvolvido: setorEnvolvido[0],
+    };
+
+    const crmResponse = JSON.parse(
+      await crmService.approveCrm(data, localStorage.getItem("@Auth:token"))
+    );
+
+    if (crmResponse.message === "SUCESSO") {
+      alert("Aprovação feita com sucesso");
+      navigate("/home");
+    } else {
+      alert("Erro ao rejeitar CRM, por favor entre em contato com o suporte");
+    }
+  };
 
   const handleReturnPage = (e) => {
     e.preventDefault();
@@ -166,6 +206,7 @@ function Crm() {
     if (
       document.querySelector('input[name="legalData"]:checked').value === "yes"
     ) {
+      div_date.style.opacity = 1;
       div_date.style.display = "flex";
       div_radio.style.marginBottom = "0";
     } else {
@@ -192,11 +233,12 @@ function Crm() {
     }
   };
 
-  const getCrm = async (CrmId, CrmVersao, token) => {
+  const getCrm = async (crmId, crmVersao, token) => {
     try {
       const response = JSON.parse(
-        await crmService.getCrm(CrmId, CrmVersao, token)
+        await crmService.getCrm(crmId, crmVersao, token)
       );
+      await userIsCreadorAndIsNotPendingAndCrmIsMaxVersion(response[0].id,response[0].versao,response[0].colaboradorCriador.matricula,response[0].setoresEnvolvidos)
       setCrm(response[0]);
       if (!!response[0].alternativas) {
         setAlternativas();
@@ -238,6 +280,8 @@ function Crm() {
       }
 
       if (!!response[0].setoresEnvolvidos) {
+        const response2 = await setorService.listSectors(token);
+        filterSectores(response[0].setoresEnvolvidos,response2)
         setSetoresEnvolvidos(response[0].setoresEnvolvidos);
         statusCrm.current = getStatusCrm(response[0].setoresEnvolvidos);
       }
@@ -250,7 +294,7 @@ function Crm() {
     }
   };
 
-    function getStatusCrm(setoresEnvolvidos) {
+  function getStatusCrm(setoresEnvolvidos) {
     const sectorsWithPendingFlag = setoresEnvolvidos.filter(checkPendingFlag);
     const sectorsWithRejectedFlag = setoresEnvolvidos.filter(checkRejectedFlag);
     const sectorsWithApprovedFlag = setoresEnvolvidos.filter(checkApprovedFlag);
@@ -298,21 +342,25 @@ function Crm() {
 
   useEffect(() => {
     fetchData();
-  },[]);
+  }, []);
 
   return (
     <main className="background_crm">
-      {selectedFlag == "rejeitado" || selectedFlag == "aprovado"
-      ? <FlagSelected 
-          flagSelected={selectedFlag} 
-          setSelectedFlag={setSelectedFlag} 
+      {console.log(impactoMudanca)}
+      {selectedFlag == "rejeitado" || selectedFlag == "aprovado" ? (
+        <FlagSelected
+          flagSelected={selectedFlag}
+          setSelectedFlag={setSelectedFlag}
           setoresEnvolvidos={setoresEnvolvidos}
           motivoRejeicao={motivoRejeicao}
           setMotivoRejeicao={setMotivoRejeicao}
           user={user}
           handleRejectCrm={handleRejectCrm}
-          />
-      : null}
+          handleApproveCrm={handleApproveCrm}
+          impactoMudanca={impactoMudanca}
+          setImpactoMudanca={setImpactoMudanca}
+        />
+      ) : null}
       {isLoading ? (
         <Loading />
       ) : (
@@ -323,46 +371,65 @@ function Crm() {
               <button className="header_img" onClick={handleReturnPage}>
                 <img src={Vector} alt="Icone de voltar" />
               </button>
-              <CrmInput
-                type="text"
-                name="nome"
-                onChange={(e) => setNome(e.target.value)}
-                value={nome}
-                readOnly={userIsNotCreadorOrIsPending()}
-              />
+              {!canEdit ? (
+                <CrmInput
+                  type="text"
+                  name="nome"
+                  onChange={(e) => setNome(e.target.value)}
+                  value={nome}
+                  readOnly={true}
+                />
+              ) : (
+                <CrmInput
+                  type="text"
+                  name="nome"
+                  onChange={(e) => setNome(e.target.value)}
+                  value={nome}
+                  readOnly={false}
+                />
+              )}
+
               <button className={`version_background ${statusCrm.current}`}>
                 <img src={Version} alt="Icone de versionamento" />
               </button>
             </div>
-
-            <CrmInput
-              type="text"
-              label="A necessidade de *"
-              name="necessidade"
-              onChange={(e) => setNecessidade(e.target.value)}
-              value={necessidade}
-              readOnly={userIsNotCreadorOrIsPending()}
-            />
+            {!canEdit ? (
+              <CrmInput
+                type="text"
+                label="A necessidade de *"
+                name="necessidade"
+                onChange={(e) => setNecessidade(e.target.value)}
+                value={necessidade}
+                readOnly={true}
+              />
+            ) : (
+              <CrmInput
+                type="text"
+                label="A necessidade de *"
+                name="necessidade"
+                onChange={(e) => setNecessidade(e.target.value)}
+                value={necessidade}
+                readOnly={false}
+              />
+            )}
 
             <div className="sectorsDiv">
               <span className="sectorDivTitle">setores envolvidos</span>
               <div className="sectors">
                 {setoresEnvolvidos.map((setorEnvolvido, i) => {
                   if (
-                    (user.matricula ==
-                      crm.colaboradorCriador.matricula ||
-                      setorEnvolvido.flag != "pendente" ||
-                      user.setor.nome != setorEnvolvido.nomeSetor
-                      || (setorEnvolvido.nomeSetor == "TI" && statusCrm.current != "pending"))
+                    user.matricula == crm.colaboradorCriador.matricula ||
+                    setorEnvolvido.flag != "pendente" ||
+                    user.setor.nome != setorEnvolvido.nomeSetor ||
+                    (setorEnvolvido.nomeSetor == "TI" &&
+                      statusCrm.current != "pending")
                   ) {
                     return (
                       <SectorInvolved
                         key={i}
                         sector={setorEnvolvido}
-                        isReadOnly={true}
+                        isreadOnly={true}
                         setSelectedFlag={setSelectedFlag}
-                        setoresEnvolvidos= {setoresEnvolvidos}
-                        setSetoresEnvolvidos={setSetoresEnvolvidos}
                         user={user}
                       />
                     );
@@ -371,7 +438,7 @@ function Crm() {
                       <SectorInvolved
                         key={i}
                         sector={setorEnvolvido}
-                        isReadOnly={false}
+                        isreadOnly={false}
                         setSelectedFlag={setSelectedFlag}
                         user={user}
                       />
@@ -380,139 +447,301 @@ function Crm() {
                 })}
               </div>
             </div>
-
-            <CrmInput
-              type="text"
-              label="Cujo impacto é *"
-              name="impacto"
-              onChange={(e) => setImpacto(e.target.value)}
-              value={impacto}
-              readOnly={userIsNotCreadorOrIsPending()}
-            />
-            <CrmInput
-              type="text"
-              label="Descrição *"
-              name="descricao"
-              onChange={(e) => setDescricao(e.target.value)}
-              value={descricao}
-              readOnly={userIsNotCreadorOrIsPending()}
-            />
-            <CrmInput
-              type="text"
-              label="Objetivo *"
-              name="objetivo"
-              onChange={(e) => setObjetivo(e.target.value)}
-              value={objetivo}
-              readOnly={userIsNotCreadorOrIsPending()}
-            />
-            <CrmInput
-              type="text"
-              label="Justificativa *"
-              name="justificativa"
-              onChange={(e) => setJustificativa(e.target.value)}
-              value={justificativa}
-              readOnly={userIsNotCreadorOrIsPending()}
-            />
-            <CrmInput
-              type="text"
-              label="Alternativas"
-              name="alternativa"
-              onChange={(e) => setAlternativas(e.target.value)}
-              value={alternativas}
-              readOnly={userIsNotCreadorOrIsPending()}
-            />
-            <span className="label_date">Possui data Legal?</span>
-            <div className="radioDataLegal">
-              <div>
-                <input
-                  type="radio"
-                  name="legalData"
-                  value="yes"
-                  id="yes"
-                  onChange={handleLegalDate}
-                  defaultChecked
-                />
-                <label htmlFor="yes">Sim</label>
-              </div>
-              <div>
-                <input
-                  type="radio"
-                  name="legalData"
-                  value="no"
-                  id="no"
-                  onChange={handleLegalDate}
-                />
-                <label htmlFor="no">Não</label>
-              </div>
-            </div>
-            <div id="date">
-              <CrmInput
-                type="date"
-                name="dataLegal"
-                onChange={(e) => setDataLegal(e.target.value)}
-                value={dataLegal}
-                readOnly={userIsNotCreadorOrIsPending()}
-              />
-            </div>
-            <div className="sectorsDiv">
-              <span className="sectorDivTitle">sistemas envolvidos</span>
+            {canEdit 
+            ? (
+              <div className="sectorsDiv">
+              <span className="sectorDivTitle">Adicionar Setores Envolvidos</span>
               <div className="sectors">
-                {sistemas.map((sistema, i) => {
+                {setores.map((setor, i) => {
                   return (
-                    <System
+                    <Sector
                       key={i}
-                      system={sistema.nome}
-                      sistemasEnvolvidos={sistemasEnvolvidos}
-                      setSistemasEnvolvidos={setSistemasEnvolvidos}
-                      defaultChecked={sistemasEnvolvidosContainsSistema(
-                        sistemasEnvolvidos,
-                        sistema.nome
-                      )}
+                      sector={setor.nome}
+                      setoresEnvolvidos={addSetoresEnvolvidos}
+                      setSetoresEnvolvidos={setAddSetoresEnvolvidos}
                     />
                   );
                 })}
               </div>
             </div>
+            ): null}
 
-            <CrmInput
-              type="text"
-              label="Comportamento Offline"
-              name="comportamentoOffline"
-              onChange={(e) => setComportamentoOffline(e.target.value)}
-              value={comportamentoOffline}
-              readOnly={userIsNotCreadorOrIsPending()}
-            />
+            {!canEdit ? (
+              <>
+                <CrmInput
+                  type="text"
+                  label="Cujo impacto é *"
+                  name="impacto"
+                  onChange={(e) => setImpacto(e.target.value)}
+                  value={impacto}
+                  readOnly={true}
+                />
+                <CrmInput
+                  type="text"
+                  label="Descrição *"
+                  name="descricao"
+                  onChange={(e) => setDescricao(e.target.value)}
+                  value={descricao}
+                  readOnly={true}
+                />
+                <CrmInput
+                  type="text"
+                  label="Objetivo *"
+                  name="objetivo"
+                  onChange={(e) => setObjetivo(e.target.value)}
+                  value={objetivo}
+                  readOnly={true}
+                />
+                <CrmInput
+                  type="text"
+                  label="Justificativa *"
+                  name="justificativa"
+                  onChange={(e) => setJustificativa(e.target.value)}
+                  value={justificativa}
+                  readOnly={true}
+                />
+                <CrmInput
+                  type="text"
+                  label="Alternativas"
+                  name="alternativa"
+                  onChange={(e) => setAlternativas(e.target.value)}
+                  value={alternativas}
+                  readOnly={true}
+                />
+              </>
+            ) : (
+              <>
+                <CrmInput
+                  type="text"
+                  label="Cujo impacto é *"
+                  name="impacto"
+                  onChange={(e) => setImpacto(e.target.value)}
+                  value={impacto}
+                  readOnly={false}
+                />
+                <CrmInput
+                  type="text"
+                  label="Descrição *"
+                  name="descricao"
+                  onChange={(e) => setDescricao(e.target.value)}
+                  value={descricao}
+                  readOnly={false}
+                />
+                <CrmInput
+                  type="text"
+                  label="Objetivo *"
+                  name="objetivo"
+                  onChange={(e) => setObjetivo(e.target.value)}
+                  value={objetivo}
+                  readOnly={false}
+                />
+                <CrmInput
+                  type="text"
+                  label="Justificativa *"
+                  name="justificativa"
+                  onChange={(e) => setJustificativa(e.target.value)}
+                  value={justificativa}
+                  readOnly={false}
+                />
+                <CrmInput
+                  type="text"
+                  label="Alternativas"
+                  name="alternativa"
+                  onChange={(e) => setAlternativas(e.target.value)}
+                  value={alternativas}
+                  readOnly={false}
+                />
+              </>
+            )}
+
+            <span className="label_date">Possui data Legal?</span>
+            <div className="radioDataLegal">
+              {!canEdit &&
+              crm.dataLegal != null &&
+              crm.dataLegal != undefined ? (
+                <>
+                  <div>
+                    <input
+                      type="radio"
+                      name="legalData"
+                      value="yes"
+                      id="yes"
+                      onChange={handleLegalDate}
+                      defaultChecked
+                    />
+                    <label htmlFor="yes">Sim</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="legalData"
+                      value="no"
+                      id="no"
+                      onChange={handleLegalDate}
+                      disabled
+                    />
+                    <label htmlFor="no">Não</label>
+                  </div>
+                </>
+              ) : !canEdit &&
+                (crm.dataLegal == null || crm.dataLegal == undefined) ? (
+                <>
+                  <div>
+                    <input
+                      type="radio"
+                      name="legalData"
+                      value="yes"
+                      id="yes"
+                      onChange={handleLegalDate}
+                      disabled
+                    />
+                    <label htmlFor="yes">Sim</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="legalData"
+                      value="no"
+                      id="no"
+                      onChange={handleLegalDate}
+                      defaultChecked
+                    />
+                    <label htmlFor="no">Não</label>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <input
+                      type="radio"
+                      name="legalData"
+                      value="yes"
+                      id="yes"
+                      onChange={handleLegalDate}
+                      defaultChecked
+                    />
+                    <label htmlFor="yes">Sim</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="legalData"
+                      value="no"
+                      id="no"
+                      onChange={handleLegalDate}
+                    />
+                    <label htmlFor="no">Não</label>
+                  </div>
+                </>
+              )}
+            </div>
+            <div id="date">
+              {!canEdit && crm.dataLegal != null ? (
+                <CrmInput
+                  type="date"
+                  name="dataLegal"
+                  onChange={(e) => setDataLegal(e.target.value)}
+                  value={dataLegal}
+                  readOnly={true}
+                />
+              ) : (
+                <CrmInput
+                  type="date"
+                  name="dataLegal"
+                  onChange={(e) => setDataLegal(e.target.value)}
+                  value={dataLegal}
+                  readOnly={false}
+                />
+              )}
+            </div>
+            <div className="sectorsDiv">
+              <span className="sectorDivTitle">sistemas envolvidos</span>
+              <div className="sectors">
+                {!canEdit
+                  ? sistemas.map((sistema, i) => {
+                      return (
+                        <System
+                          key={i}
+                          system={sistema.nome}
+                          sistemasEnvolvidos={sistemasEnvolvidos}
+                          setSistemasEnvolvidos={setSistemasEnvolvidos}
+                          defaultChecked={sistemasEnvolvidosContainsSistema(
+                            sistemasEnvolvidos,
+                            sistema.nome
+                          )}
+                          readOnly={true}
+                        />
+                      );
+                    })
+                  : sistemas.map((sistema, i) => {
+                      return (
+                        <System
+                          key={i}
+                          system={sistema.nome}
+                          sistemasEnvolvidos={sistemasEnvolvidos}
+                          setSistemasEnvolvidos={setSistemasEnvolvidos}
+                          defaultChecked={sistemasEnvolvidosContainsSistema(
+                            sistemasEnvolvidos,
+                            sistema.nome
+                          )}
+                          readOnly={false}
+                        />
+                      );
+                    })}
+              </div>
+            </div>
+            {!canEdit ? (
+              <CrmInput
+                type="text"
+                label="Comportamento Offline"
+                name="comportamentoOffline"
+                onChange={(e) => setComportamentoOffline(e.target.value)}
+                value={comportamentoOffline}
+                readOnly={true}
+              />
+            ) : (
+              <CrmInput
+                type="text"
+                label="Comportamento Offline"
+                name="comportamentoOffline"
+                onChange={(e) => setComportamentoOffline(e.target.value)}
+                value={comportamentoOffline}
+                readOnly={false}
+              />
+            )}
 
             <div className="filesDiv">
               <span className="filesDiv_title">Arquivos</span>
               <div className="files">
-                {arquivos.map((file, i) => {
-                  return <File key={i} file={file} />;
-                })}
-              </div>
-              <div className="filesAdd" value="adicionar arquivos">
-                <span>ADICIONAR ARQUIVOS</span>
-                <FileUpload
-                  files={arquivos}
-                  setFiles={setArquivos}
-                  className="file_upload"
-                  readOnly={userIsNotCreadorOrIsPending()}
-                />
+                {arquivos.length > 0 ? (
+                  arquivos.map((file, i) => {
+                    return <File key={i} file={file} />;
+                  })
+                ) : (
+                  <h1 className="noFiles">Nenhum arquivo selecionado</h1>
+                )}
               </div>
             </div>
 
+            {!canEdit ? null : (
+              <>
+                <div className="filesAdd" value="adicionar arquivos">
+                  <span>ADICIONAR ARQUIVOS</span>
+                  <FileUpload
+                    files={arquivos}
+                    setFiles={setArquivos}
+                    className="file_upload"
+                  />
+                </div>
 
-            {CrmIsPending()
-            ? (null)
-            : (
-              <input
-              className="submit"
-              type="submit"
-              onClick={handleUpdateCrm}
-              value="enviar crm"
-            />
+                <input
+                  className="submit"
+                  type="submit"
+                  onClick={handleUpdateCrm}
+                  value="enviar crm"
+                />
+              </>
             )}
-           
           </form>
         </>
       )}

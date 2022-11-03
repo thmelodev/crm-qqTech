@@ -3,7 +3,7 @@ import "../css/SectorInvolved.css";
 import colaboradorService from "../services/ColaboradorService";
 import LoadingComponents from "./LoadingComponents";
 
-function SectorInvolved({ sector, isReadOnly, setSelectedFlag, user }) {
+function SectorInvolved({ sector, isreadOnly, setSelectedFlag, user }) {
   const ifFlagApproved = sector.flag == "aprovado" ? true : false;
   const ifFlagRejected = sector.flag == "rejeitado" ? true : false;
   const [colaboradorName, setColaboradorName] = useState("");
@@ -43,7 +43,7 @@ function SectorInvolved({ sector, isReadOnly, setSelectedFlag, user }) {
       `checkRejeitado class_${sector.nomeSetor}`
     )[0];
 
-    if (isReadOnly) {
+    if (isreadOnly) {
       approvedCheckBox.disabled = true;
       approvedCheckBox.style.cursor = "default"
     
@@ -114,7 +114,7 @@ function SectorInvolved({ sector, isReadOnly, setSelectedFlag, user }) {
             />
           </div>
         </>
-      ) : isReadOnly ? (
+      ) : isreadOnly ? (
         <>
           <label>{`${sector.nomeSetor} `}</label>
           <div>

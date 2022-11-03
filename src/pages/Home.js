@@ -75,7 +75,8 @@ function Home() {
             <img src={UserImage} alt="Foto de perfil" />
             <div className="user_info">
               <h1 className="user_name">{`${userJson.nome} ${userJson.sobrenome}`}</h1>
-              <span className="user_registration">980135</span>
+              <span className="user_registration">{`${userJson.setor.nome} `}</span>
+              <span className="user_registration">{`${userJson.matricula}`}</span>
             </div>
           </div>
           <Link to="/createCrm">

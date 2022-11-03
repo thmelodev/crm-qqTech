@@ -83,6 +83,7 @@
 .radioDataLegal {
   display: flex;
   gap: 8rem;
+  margin-bottom: 2rem;
 }
 
 .radioDataLegal input {
@@ -94,6 +95,10 @@
 .radioDataLegal label {
   font-size: 2rem;
   text-transform: uppercase;
+}
+
+#date{
+  display: none;
 }
 
 .sectorsDiv {

@@ -1,3 +1,4 @@
+
 .title_crm {
     padding: 0.7rem;
     font-size: 3rem;
@@ -28,6 +29,7 @@
     min-width: min-content;
     width: min-content;
     margin: 3rem 0;
+    opacity: 1;
 }
 
 .textarea_crm{

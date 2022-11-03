@@ -47,6 +47,20 @@ class CrmService {
     return JSON.stringify(response.data);
   }
 
+  async approveCrm(data,token) {
+    const response = await axios({
+      url: `${url_base}/crm/approve`,
+      method: "POST",
+      timeout: "5000",
+      data:data,
+      headers: {
+        Accept: "application/json",
+        Authorization: `bearer ${token}`
+      },
+    });
+    return JSON.stringify(response.data);
+  }
+
   async listRejectedCrm(matricula,token) {
     const response = await axios({
       url: `${url_base}/crm/rejectedCrm?matricula=${matricula}`,
@@ -89,6 +103,19 @@ class CrmService {
   async getCrm(id,versao,token){
     const response = await axios({
       url: `${url_base}/crm?id=${id}&versao=${versao}`,
+      method: "GET",
+      timeout: "5000",
+      headers: {
+        Accept: "application/json",
+        Authorization: `bearer ${token}`
+      },
+    })
+    return JSON.stringify(response.data);
+  }
+
+  async maxVersion(id,token){
+    const response = await axios({
+      url: `${url_base}/crm/maxVersion?id=${id}`,
       method: "GET",
       timeout: "5000",
       headers: {

@@ -76,14 +76,17 @@ function CreateCrm() {
   const handleLegalDate = () => {
     const div_date = document.getElementById("date");
     const div_radio = document.getElementsByClassName("radioDataLegal")[0];
+    const dateLegalInput = document.getElementById('dataLegal')
+    console.log(dateLegalInput[0])
     if (
       document.querySelector('input[name="legalData"]:checked').value === "yes"
     ) {
       div_date.style.display = "flex";
       div_radio.style.marginBottom = "0";
     } else {
+      dateLegalInput.value = undefined
       div_date.style.display = "none";
-      div_radio.style.marginBottom = "3rem";
+      div_radio.style.marginBottom = "2rem";
     }
   };
 
