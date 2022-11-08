@@ -5,7 +5,7 @@
 
   width: 100%;
   color: white;
-  background-color: #242428;
+  background-color: #29292e;
 }
 
 .statusCrm {
@@ -80,7 +80,6 @@
   margin-bottom: 3rem;
 }
 
-
 .radioDataLegal {
   display: flex;
   gap: 8rem;
@@ -118,6 +117,13 @@
   gap: 2.5rem;
   margin-bottom: 3rem;
 }
+.sectorInvolved {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
 
 .filesDiv {
   display: flex;
@@ -144,7 +150,6 @@
   background-color: #009028;
   filter: drop-shadow(0px 0px 20.4991px rgba(0, 0, 0, 0.5));
 
-  
   border-radius: 2.2rem;
   border: none;
   padding: 1.2rem;
@@ -153,14 +158,11 @@
   position: relative;
 }
 
-.filesAdd span{
+.filesAdd span {
   text-transform: uppercase;
   color: white;
   font-size: 1.5rem;
-
 }
-
-
 
 .submit {
   background-color: #e0be07;
@@ -176,18 +178,89 @@
   margin-bottom: 2rem;
 }
 
-.noFiles{
+.noFiles {
   font-size: 1.7rem;
   text-transform: uppercase;
 }
 
+.viewComplexidade {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem;
+}
 
+.viewComplexidade h1 {
+  font-size: 2rem;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+}
+
+.divRadioComplexidade_crm {
+  display: flex;
+  width: 100%;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.divRadioComplexidade_crm div{
+  display: flex; 
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.divRadioComplexidade_crm label {
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  color: rgb(255, 255, 255);
+}
+
+.divRadioComplexidade_crm input{
+  width: 2rem;
+  height: 2rem;
+  cursor: default;
+  appearance: none;
+  background-color: white;
+  outline: none;
+  border: 0.0625rem solid gray;
+  border-radius: 50%;
+  position: relative;
+  transition: all 600ms ease-in-out;
+}
+
+.divRadioComplexidade_crm input:checked{
+  background-color: #009028;
+}
+
+.divRadioComplexidade_crm input:disabled,.radioDataLegal input:disabled{
+  opacity: 0.5;
+}
+
+.divRadioComplexidade_crm input::before {
+  content: "";
+  position: absolute;
+  width: 0.4rem;
+  height: 0.8rem;
+  background-color: none;
+  opacity: 0;
+  transform: rotate(45deg);
+  top: 2px;
+  left: 5px;
+  transition: all 400ms ease-in-out;
+}
+
+.divRadioComplexidade_crm input:checked::before{
+  opacity: 1;
+  border-right: 0.4rem solid white;
+  border-bottom: 0.4rem solid white;
+}
 
 @media screen and (min-width: 900px) {
   .header_crm {
     padding: 0 3rem;
   }
-
 }
 @media screen and (max-width: 820px) {
   .title-crm {
@@ -231,6 +304,4 @@
   .form_crm {
     padding: 2rem 1rem;
   }
-
-  
 }

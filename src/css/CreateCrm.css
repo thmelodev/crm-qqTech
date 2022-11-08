@@ -5,7 +5,7 @@
 
   width: 100%;
   color: white;
-  background-color: #242428;
+  background-color: #29292E;
 }
 
 .statusCrm {
@@ -178,6 +178,11 @@
   font-size: 2rem;
   padding: 1.2rem 2.2rem;
   margin-bottom: 2rem;
+}
+
+.noFiles{
+  font-size: 1.7rem;
+  text-transform: uppercase;
 }
 
 

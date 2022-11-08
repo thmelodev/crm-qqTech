@@ -1,7 +1,7 @@
 //components
 import CrmInput from "../components/CrmInput";
 import FileUpload from "../components/FileUpload";
-import File from "../components/File";
+import FileItem from "../components/FileItem";
 import Sector from "../components/Sector";
 
 //assets
@@ -14,25 +14,25 @@ import "../css/CreateCrm.css";
 import React, { useEffect, useState } from "react";
 import setorService from "../services/SetorService";
 import crmService from "../services/CrmService";
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import System from "../components/System";
 import sistemaService from "../services/SistemaService";
 
 function CreateCrm() {
   const [nome, setNome] = useState("");
-  const [necessidade, setNecessidade] = useState(null);
-  const [impactoCriacao, setImpactoCriacao] = useState(null);
-  const [descricao, setDescricao] = useState(null);
-  const [objetivo, setObjetivo] = useState(null);
-  const [justificativa, setJustificativa] = useState(null);
-  const [alternativas, setAlternativas] = useState(null);
-  const [dataLegal, setDataLegal] = useState(null);
-  const [comportamentoOffline, setComportamentoOffline] = useState(null);
+  const [necessidade, setNecessidade] = useState("");
+  const [impacto, setImpacto] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [objetivo, setObjetivo] = useState("");
+  const [justificativa, setJustificativa] = useState("");
+  const [alternativas, setAlternativas] = useState("");
+  const [dataLegal, setDataLegal] = useState(undefined);
+  const [comportamentoOffline, setComportamentoOffline] = useState("");
   const [setores, setSetores] = useState([]);
   const [setoresEnvolvidos, setSetoresEnvolvidos] = useState(["TI"]);
   const [sistemas, setSistemas] = useState([]);
   const [sistemasEnvolvidos, setSistemasEnvolvidos] = useState([]);
-  const [arquivos, setArquivos] = useState([]);
+  const [documentos, setDocumentos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [colaboradorCriador, setColaboradorCriador] = useState();
 
@@ -41,30 +41,65 @@ function CreateCrm() {
   const handleCreateCrm = async (evt) => {
     setIsLoading(true);
     evt.preventDefault();
-    const data = {
-      nome: nome,
-      necessidade: necessidade,
-      impacto: impactoCriacao,
-      descricao: descricao,
-      objetivo: objetivo,
-      justificativa: justificativa,
-      alternativas: alternativas,
-      dataLegal: dataLegal,
-      comportamentoOffline: comportamentoOffline,
-      colaboradorCriador: colaboradorCriador,
-      setoresEnvolvidos: setoresEnvolvidos,
-      sistemasEnvolvidos: sistemasEnvolvidos,
-      documentos: arquivos,
-    };
-    const crmResponse = JSON.parse(
-      await crmService.createCrm(data, localStorage.getItem("@Auth:token"))
-    );  
-    setIsLoading(false);
-    if (crmResponse.message === "SUCESSO") {
-      alert("Crm cadastrada com sucesso");
-      navigate("/home");
-    } else {
-      alert("Erro ao cadastrar CRM, por favor entre em contato com o suporte");
+
+    let requiredFields = [
+      nome,
+      necessidade,
+      impacto,
+      descricao,
+      objetivo,
+      justificativa,
+    ];
+    let requiredFieldsIsOk = true;
+    for (const field of requiredFields) {
+      if (field == "") {
+        requiredFieldsIsOk = false;
+        break;
+      }
+    }
+
+    if (requiredFieldsIsOk) {
+      const data = new FormData();
+      data.append("nome", nome);
+      data.append("necessidade", necessidade);
+      data.append("impacto", impacto);
+      data.append("descricao", descricao);
+      data.append("objetivo", objetivo);
+      data.append("justificativa", justificativa);
+      data.append("alternativas", alternativas);
+      data.append("dataLegal", dataLegal);
+      data.append("comportamentoOffline", comportamentoOffline);
+      data.append("colaboradorCriador", JSON.stringify(colaboradorCriador));
+
+      for (const setorEnvolvido of setoresEnvolvidos) {
+        data.append("setoresEnvolvidos", setorEnvolvido);
+      }
+
+      for (const sistemaEnvolvido of sistemasEnvolvidos) {
+        data.append("sistemasEnvolvidos", sistemaEnvolvido);
+      }
+
+      for (const documento of documentos) {
+        if (documento instanceof File) {
+          data.append("documentos", documento, documento.name);
+        } else {
+          data.append("documentosComPath", documento);
+        }
+      }
+      const crmResponse = JSON.parse(
+        await crmService.createCrm(data, localStorage.getItem("@Auth:token"))
+      );
+      setIsLoading(false);
+      if (crmResponse.message === "SUCESSO") {
+        alert("Crm cadastrada com sucesso");
+        navigate("/home");
+      } else {
+        alert(
+          "Erro ao cadastrar CRM, por favor entre em contato com o suporte"
+        );
+      }
+    }else{
+      alert('Campos obrigatórios não preenchidos')
     }
   };
 
@@ -76,15 +111,14 @@ function CreateCrm() {
   const handleLegalDate = () => {
     const div_date = document.getElementById("date");
     const div_radio = document.getElementsByClassName("radioDataLegal")[0];
-    const dateLegalInput = document.getElementById('dataLegal')
-    console.log(dateLegalInput[0])
+    const dateLegalInput = document.getElementById("dataLegal");
     if (
       document.querySelector('input[name="legalData"]:checked').value === "yes"
     ) {
       div_date.style.display = "flex";
       div_radio.style.marginBottom = "0";
     } else {
-      dateLegalInput.value = undefined
+      dateLegalInput.value = undefined;
       div_date.style.display = "none";
       div_radio.style.marginBottom = "2rem";
     }
@@ -107,7 +141,7 @@ function CreateCrm() {
       return error;
     }
   };
-  
+
   useEffect(() => {
     getSectors(localStorage.getItem("@Auth:token"));
     getSystems(localStorage.getItem("@Auth:token"));
@@ -153,7 +187,7 @@ function CreateCrm() {
           type="text"
           label="Cujo impacto é *"
           name="impactoCriacao"
-          onChange={(e) => setImpactoCriacao(e.target.value)}
+          onChange={(e) => setImpacto(e.target.value)}
         />
         <CrmInput
           type="text"
@@ -235,15 +269,19 @@ function CreateCrm() {
         <div className="filesDiv">
           <span className="filesDiv_title">Arquivos</span>
           <div className="files">
-            {arquivos.map((file, i) => {
-              return <File key={i} file={file} />;
-            })}
+            {documentos.length > 0 ? (
+              documentos.map((file, i) => {
+                return <FileItem key={i} file={file} />;
+              })
+            ) : (
+              <h1 className="noFiles">Nenhum arquivo selecionado</h1>
+            )}
           </div>
           <div className="filesAdd" value="adicionar arquivos">
             <span>ADICIONAR ARQUIVOS</span>
             <FileUpload
-              files={arquivos}
-              setFiles={setArquivos}
+              files={documentos}
+              setFiles={setDocumentos}
               className="file_upload"
             />
           </div>

@@ -1,8 +1,8 @@
 
 .filter_field{
-    display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: min-content min-content;
+    display: flex;
+    flex-direction: column;
+    width: min-content;
     gap: 0.32rem;
     
 }

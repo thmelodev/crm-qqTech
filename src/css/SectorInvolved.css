@@ -2,6 +2,7 @@
     background-color: #b9cde5;
     padding: 1rem;
     display: flex;
+    width: max-content;
     gap: 1rem;
     justify-content: center;
     align-items: center;

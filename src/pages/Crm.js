@@ -1,7 +1,12 @@
 //components
 import CrmInput from "../components/CrmInput";
 import FileUpload from "../components/FileUpload";
-import File from "../components/File";
+import FileItem from "../components/FileItem";
+import Loading from "../components/Loading";
+import SectorInvolved from "../components/SectorInvolved";
+import FlagSelected from "../components/FlagSelected";
+import Sector from "../components/Sector";
+import System from "../components/System";
 
 //assets
 import Vector from "../assets/vector.svg";
@@ -12,15 +17,16 @@ import "../css/Crm.css";
 
 //hooks
 import React, { useEffect, useRef, useState } from "react";
-import System from "../components/System";
+import { Link, useNavigate } from "react-router-dom";
+
+//services
 import setorService from "../services/SetorService";
 import sistemaService from "../services/SistemaService";
-import { Link, useNavigate } from "react-router-dom";
 import crmService from "../services/CrmService";
-import Loading from "../components/Loading";
-import SectorInvolved from "../components/SectorInvolved";
-import FlagSelected from "../components/FlagSelected";
-import Sector from "../components/Sector";
+import documentoService from "../services/DocumentoService";
+
+//imports
+import * as fd from "js-file-download";
 
 function Crm() {
   const [crm, setCrm] = useState([]);
@@ -33,30 +39,37 @@ function Crm() {
   const [objetivo, setObjetivo] = useState("");
   const [justificativa, setJustificativa] = useState("");
   const [alternativas, setAlternativas] = useState("");
-  const [dataLegal, setDataLegal] = useState("");
+  const [dataLegal, setDataLegal] = useState();
   const [comportamentoOffline, setComportamentoOffline] = useState("");
   const [setoresEnvolvidos, setSetoresEnvolvidos] = useState([]);
   const [sistemas, setSistemas] = useState([]);
   const [sistemasEnvolvidos, setSistemasEnvolvidos] = useState([]);
-  const [arquivos, setArquivos] = useState([]);
+  const [documentos, setDocumentos] = useState([]);
   const [colaboradorCriador, setColaboradorCriador] = useState("");
   const [motivoRejeicao, setMotivoRejeicao] = useState("");
-  const [complexidade, setComplexidade] = useState()
+  const [complexidade, setComplexidade] = useState();
 
-  
   const [setores, setSetores] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedFlag, setSelectedFlag] = useState("pendente");
   const [addSetoresEnvolvidos, setAddSetoresEnvolvidos] = useState([]);
-  const [canEdit, setCanEdit] = useState("")
+  const [canEdit, setCanEdit] = useState("");
+
   const statusCrm = useRef("");
   const sectorsWithPendingFlag = setoresEnvolvidos.filter(checkPendingFlag);
-  
-  async function userIsCreadorAndIsNotPendingAndCrmIsMaxVersion(crmId,crmVersao,matriculaColaboradorCriador,crmSetoresEnvolvidos) {
+
+  async function userIsCreadorAndIsNotPendingAndCrmIsMaxVersion(
+    crmId,
+    crmVersao,
+    matriculaColaboradorCriador,
+    crmSetoresEnvolvidos
+  ) {
     const maxVersion = JSON.parse(
       await crmService.maxVersion(crmId, localStorage.getItem("@Auth:token"))
     );
-    const MatriculaUser = JSON.parse(localStorage.getItem("@Auth:user")).matricula
+    const MatriculaUser = JSON.parse(
+      localStorage.getItem("@Auth:user")
+    ).matricula;
     if (
       matriculaColaboradorCriador == MatriculaUser &&
       getStatusCrm(crmSetoresEnvolvidos) != "pending" &&
@@ -65,12 +78,12 @@ function Crm() {
       setCanEdit(true);
     else setCanEdit(false);
   }
- 
-  function filterSectores(crmSetoresEnvolvidos,allSetores){
-    for(const sector of crmSetoresEnvolvidos){
-      allSetores = allSetores.filter((setor) => setor.nome != sector.nomeSetor)
+
+  function filterSectores(crmSetoresEnvolvidos, allSetores) {
+    for (const sector of crmSetoresEnvolvidos) {
+      allSetores = allSetores.filter((setor) => setor.nome != sector.nomeSetor);
     }
-    setSetores(allSetores)
+    setSetores(allSetores);
   }
 
   const navigate = useNavigate();
@@ -79,60 +92,39 @@ function Crm() {
   const id = urlParams.get("id");
   const versao = urlParams.get("versao");
 
-  const handleCreateCrm = async (evt) => {
-    setIsLoading(true);
-    evt.preventDefault();
-
-    let data = {
-      nome: nome,
-      necessidade: necessidade,
-      impacto: impacto,
-      descricao: descricao,
-      objetivo: objetivo,
-      justificativa: justificativa,
-      alternativas: alternativas,
-      dataLegal: dataLegal,
-      comportamentoOffline: comportamentoOffline,
-      colaboradorCriador: colaboradorCriador,
-      setoresEnvolvidos: setoresEnvolvidos,
-      sistemasEnvolvidos: sistemasEnvolvidos,
-      documentos: arquivos,
-    };
-
-    const crmResponse = JSON.parse(
-      await crmService.createCrm(data, localStorage.getItem("@Auth:token"))
-    );
-    setIsLoading(false);
-    if (crmResponse.message === "SUCESSO") {
-      alert("Crm cadastrada com sucesso");
-      navigate("/home");
-    } else {
-      alert("Erro ao cadastrar CRM, por favor entre em contato com o suporte");
-    }
-  };
-
   const handleUpdateCrm = async (evt) => {
     setIsLoading(true);
     evt.preventDefault();
     if (true) {
-      let data = {
-        id: crm.id,
-        versao: crm.versao,
-        nome: nome,
-        necessidade: necessidade,
-        impacto: impacto,
-        descricao: descricao,
-        objetivo: objetivo,
-        justificativa: justificativa,
-        alternativas: alternativas,
-        dataLegal: dataLegal,
-        comportamentoOffline: comportamentoOffline,
-        colaboradorCriador: colaboradorCriador,
-        setoresEnvolvidos: setoresEnvolvidos.concat(addSetoresEnvolvidos),
-        sistemasEnvolvidos: sistemasEnvolvidos,
-        documentos: arquivos,
-      };
+      const data = new FormData();
+      data.append("id", crm.id);
+      data.append("versao", crm.versao);
+      data.append("nome", nome);
+      data.append("necessidade", necessidade);
+      data.append("impacto", impacto);
+      data.append("descricao", descricao);
+      data.append("objetivo", objetivo);
+      data.append("justificativa", justificativa);
+      data.append("alternativas", alternativas);
+      data.append("dataLegal", dataLegal);
+      data.append("comportamentoOffline", comportamentoOffline);
+      data.append("colaboradorCriador", JSON.stringify(colaboradorCriador));
 
+      for (const setorEnvolvido of setoresEnvolvidos) {
+        data.append("setoresEnvolvidos", JSON.stringify(setorEnvolvido));
+      }
+
+      for (const sistemaEnvolvido of sistemasEnvolvidos) {
+        data.append("sistemasEnvolvidos", JSON.stringify(sistemaEnvolvido));
+      }
+
+      for (const documento of documentos) {
+        if (documento instanceof File) {
+          data.append("documentos", documento, documento.name);
+        } else {
+          data.append("documentosComPath", JSON.stringify(documento));
+        }
+      }
       const crmResponse = JSON.parse(
         await crmService.updateCrm(data, localStorage.getItem("@Auth:token"))
       );
@@ -144,12 +136,9 @@ function Crm() {
         alert(
           "Você não tem autorização de atualizar a CRM ou ela está pendente no momento"
         );
-        setAddSetoresEnvolvidos([])
+        setAddSetoresEnvolvidos([]);
       }
-
-      
     } else {
-
     }
   };
 
@@ -180,14 +169,13 @@ function Crm() {
     const setorEnvolvido = setoresEnvolvidos.filter(
       (setor) => setor.nomeSetor == user.setor.nome
     );
-    
 
     let data = {
       id: crm.id,
       versao: crm.versao,
       setorEnvolvido: setorEnvolvido[0],
       complexidade: complexidade,
-      impactoMudanca: impactoMudanca
+      impactoMudanca: impactoMudanca,
     };
 
     const crmResponse = JSON.parse(
@@ -231,6 +219,15 @@ function Crm() {
     }
   };
 
+  const downloadDocumento = async (evt) => {
+    const doc = JSON.parse(evt.target.className);
+    const blobData = await documentoService.getDocument(
+      doc.pathDocumento,
+      localStorage.getItem("@Auth:token")
+    );
+    fd(blobData, doc.name);
+  };
+
   const getSystems = async (token) => {
     try {
       const response = await sistemaService.listSystems(token);
@@ -245,56 +242,86 @@ function Crm() {
       const response = JSON.parse(
         await crmService.getCrm(crmId, crmVersao, token)
       );
-      await userIsCreadorAndIsNotPendingAndCrmIsMaxVersion(response[0].id,response[0].versao,response[0].colaboradorCriador.matricula,response[0].setoresEnvolvidos)
+      await userIsCreadorAndIsNotPendingAndCrmIsMaxVersion(
+        response[0].id,
+        response[0].versao,
+        response[0].colaboradorCriador.matricula,
+        response[0].setoresEnvolvidos
+      );
       setCrm(response[0]);
-      if (!!response[0].alternativas) {
-        setAlternativas();
+      if (response[0].alternativas != undefined) {
+        setAlternativas(response[0].alternativas);
       }
-      if (!!response[0].comportamentoOffline) {
+      if (response[0].comportamentoOffline != undefined) {
         setComportamentoOffline(response[0].comportamentoOffline);
       }
 
-      if (!!response[0].colaboradorCriador) {
+      if (response[0].colaboradorCriador != undefined) {
         setColaboradorCriador(response[0].colaboradorCriador);
       }
 
-      if (!!response[0].dataLegal) {
+      if (response[0].dataLegal != undefined) {
         setDataLegal(response[0].dataLegal);
       }
 
-      if (!!response[0].descricao) {
+      if (response[0].descricao != undefined) {
         setDescricao(response[0].descricao);
       }
 
-      if (!!response[0].impacto) {
+      if (response[0].impacto != undefined) {
         setImpacto(response[0].impacto);
       }
 
-      if (!!response[0].justificativa) {
+      if (response[0].justificativa != undefined) {
         setJustificativa(response[0].justificativa);
       }
 
-      if (!!response[0].necessidade) {
+      if (response[0].necessidade != undefined) {
         setNecessidade(response[0].necessidade);
       }
 
-      if (!!response[0].nome) {
+      if (response[0].nome != undefined) {
         setNome(response[0].nome);
       }
 
-      if (!!response[0].objetivo) {
+      if (response[0].objetivo != undefined) {
         setObjetivo(response[0].objetivo);
       }
 
-      if (!!response[0].setoresEnvolvidos) {
+      if (response[0].setoresEnvolvidos != undefined) {
         const response2 = await setorService.listSectors(token);
-        filterSectores(response[0].setoresEnvolvidos,response2)
+        filterSectores(response[0].setoresEnvolvidos, response2);
         setSetoresEnvolvidos(response[0].setoresEnvolvidos);
         statusCrm.current = getStatusCrm(response[0].setoresEnvolvidos);
       }
 
-      if (!!response[0].sistemasEnvolvidos) {
+      if (response[0].complexidade != undefined) {
+        setComplexidade(response[0].complexidade);
+      }
+
+      if (response[0].impactoMudanca != undefined) {
+        setImpactoMudanca(response[0].impactoMudanca);
+      }
+
+      if (response[0].sistemasEnvolvidos != undefined) {
         setSistemasEnvolvidos(response[0].sistemasEnvolvidos);
+      }
+
+      if (response[0].documentos != undefined) {
+        const allDocuments = [];
+        for (const documento of response[0].documentos) {
+          let documentName = documento;
+          documentName = documentName.pathDocumento.split("\\");
+          documentName =
+            documentName[documentName.length - 1].split("-filename");
+          documentName = documentName[1];
+          const newDocumento = {
+            name: documentName,
+            pathDocumento: documento.pathDocumento,
+          };
+          allDocuments.push(newDocumento);
+        }
+        setDocumentos(allDocuments);
       }
     } catch (error) {
       return console.log(error);
@@ -429,18 +456,20 @@ function Crm() {
                     user.matricula == crm.colaboradorCriador.matricula ||
                     setorEnvolvido.flag != "pendente" ||
                     user.setor.nome != setorEnvolvido.nomeSetor ||
-                    getStatusCrm(setoresEnvolvidos) != 'pending' ||
+                    getStatusCrm(setoresEnvolvidos) != "pending" ||
                     (setorEnvolvido.nomeSetor == "TI" &&
                       sectorsWithPendingFlag.length != 1)
                   ) {
                     return (
-                      <SectorInvolved
-                        key={i}
-                        sector={setorEnvolvido}
-                        isreadOnly={true}
-                        setSelectedFlag={setSelectedFlag}
-                        user={user}
-                      />
+                      <div className="sectorInvolved" key={i}>
+                        <SectorInvolved
+                          key={i}
+                          sector={setorEnvolvido}
+                          isreadOnly={true}
+                          setSelectedFlag={setSelectedFlag}
+                          user={user}
+                        />
+                      </div>
                     );
                   } else {
                     return (
@@ -454,26 +483,42 @@ function Crm() {
                     );
                   }
                 })}
-              </div>
-            </div>
-            {canEdit 
-            ? (
-              <div className="sectorsDiv">
-              <span className="sectorDivTitle">Adicionar Setores Envolvidos</span>
-              <div className="sectors">
-                {setores.map((setor, i) => {
+                {setoresEnvolvidos.map((setorEnvolvido, i) => {
                   return (
-                    <Sector
-                      key={i}
-                      sector={setor.nome}
-                      setoresEnvolvidos={addSetoresEnvolvidos}
-                      setSetoresEnvolvidos={setAddSetoresEnvolvidos}
-                    />
+                    <div key={`${i}_motivoReject`}>
+                      {!!setorEnvolvido.justificativa ? (
+                        <CrmInput
+                          type="text"
+                          label={`Motivo da Rejeição - ${setorEnvolvido.nomeSetor}`}
+                          name={`setorJustificativa_${setorEnvolvido.nomeSetor}`}
+                          value={setorEnvolvido.justificativa}
+                          readOnly={true}
+                        />
+                      ) : null}
+                    </div>
                   );
                 })}
               </div>
             </div>
-            ): null}
+            {canEdit ? (
+              <div className="sectorsDiv">
+                <span className="sectorDivTitle">
+                  Adicionar Setores Envolvidos
+                </span>
+                <div className="sectors">
+                  {setores.map((setor, i) => {
+                    return (
+                      <Sector
+                        key={i}
+                        sector={setor.nome}
+                        setoresEnvolvidos={addSetoresEnvolvidos}
+                        setSetoresEnvolvidos={setAddSetoresEnvolvidos}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
 
             {!canEdit ? (
               <>
@@ -562,7 +607,6 @@ function Crm() {
                 />
               </>
             )}
-
             <span className="label_date">Possui data Legal?</span>
             <div className="radioDataLegal">
               {!canEdit &&
@@ -618,7 +662,10 @@ function Crm() {
                     <label htmlFor="no">Não</label>
                   </div>
                 </>
-              ) : (
+              ) : 
+              canEdit && 
+              crm.dataLegal != null &&
+              crm.dataLegal != undefined ? (
                 <>
                   <div>
                     <input
@@ -642,7 +689,30 @@ function Crm() {
                     <label htmlFor="no">Não</label>
                   </div>
                 </>
-              )}
+              ):
+              (<>
+                <div>
+                  <input
+                    type="radio"
+                    name="legalData"
+                    value="yes"
+                    id="yes"
+                    onChange={handleLegalDate}
+                  />
+                  <label htmlFor="yes">Sim</label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    name="legalData"
+                    value="no"
+                    id="no"
+                    onChange={handleLegalDate}
+                    defaultChecked
+                  />
+                  <label htmlFor="no">Não</label>
+                </div>
+              </>)}
             </div>
             <div id="date">
               {!canEdit && crm.dataLegal != null ? (
@@ -663,6 +733,98 @@ function Crm() {
                 />
               )}
             </div>
+            {!!complexidade && getStatusCrm(setoresEnvolvidos) == 'approved' ? (
+              <div className="viewComplexidade">
+                <h1>Complexidade</h1>
+                <div className="divRadioComplexidade_crm">
+                  <div>
+                    {complexidade == "Alta" ? (
+                      <input
+                        type="radio"
+                        value="Alta"
+                        name="complexidade"
+                        defaultChecked
+                      />
+                    ) : (
+                      <input
+                        type="radio"
+                        value="Alta"
+                        name="complexidade"
+                        disabled
+                      />
+                    )}
+
+                    <label>Alta</label>
+                  </div>
+                  <div>
+                    {complexidade == "Média" ? (
+                      <input
+                        type="radio"
+                        value="Média"
+                        name="complexidade"
+                        defaultChecked
+                      />
+                    ) : (
+                      <input
+                        type="radio"
+                        value="Média"
+                        name="complexidade"
+                        disabled
+                      />
+                    )}
+                    <label>Media</label>
+                  </div>
+                  <div>
+                    {complexidade == "Baixa" ? (
+                      <input
+                        type="radio"
+                        value="Baixa"
+                        name="complexidade"
+                        defaultChecked
+                      />
+                    ) : (
+                      <input
+                        type="radio"
+                        value="Baixa"
+                        name="complexidade"
+                        disabled
+                      />
+                    )}
+                    <label>Baixa</label>
+                  </div>
+                  <div>
+                    {complexidade == "Muito Baixa" ? (
+                      <input
+                        type="radio"
+                        value="Muito Baixa"
+                        name="complexidade"
+                        defaultChecked
+                      />
+                    ) : (
+                      <input
+                        type="radio"
+                        value="Muito Baixa"
+                        name="complexidade"
+                        disabled
+                      />
+                    )}
+
+                    <label>Muito Baixa</label>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+            
+            {!!impactoMudanca && getStatusCrm(setoresEnvolvidos) == 'approved'
+            ?(<CrmInput
+              type="text"
+              label="Impacto da Mudança"
+              name="impactoMudanca"
+              value={impactoMudanca}
+              readOnly={true}
+            />) 
+            :(null)}
+
             <div className="sectorsDiv">
               <span className="sectorDivTitle">sistemas envolvidos</span>
               <div className="sectors">
@@ -722,9 +884,15 @@ function Crm() {
             <div className="filesDiv">
               <span className="filesDiv_title">Arquivos</span>
               <div className="files">
-                {arquivos.length > 0 ? (
-                  arquivos.map((file, i) => {
-                    return <File key={i} file={file} />;
+                {documentos.length > 0 ? (
+                  documentos.map((file, i) => {
+                    return (
+                      <FileItem
+                        file={file}
+                        key={i}
+                        onClick={downloadDocumento}
+                      />
+                    );
                   })
                 ) : (
                   <h1 className="noFiles">Nenhum arquivo selecionado</h1>
@@ -737,8 +905,8 @@ function Crm() {
                 <div className="filesAdd" value="adicionar arquivos">
                   <span>ADICIONAR ARQUIVOS</span>
                   <FileUpload
-                    files={arquivos}
-                    setFiles={setArquivos}
+                    files={documentos}
+                    setFiles={setDocumentos}
                     className="file_upload"
                   />
                 </div>

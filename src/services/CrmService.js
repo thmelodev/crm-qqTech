@@ -12,7 +12,7 @@ class CrmService {
       timeout: "5000",
       data:data,
       headers: {
-        Accept: "application/json",
+        Accept: "multipart/form-data",
         Authorization: `bearer ${token}`
       },
     });
@@ -24,10 +24,10 @@ class CrmService {
       url: `${url_base}/crm/updateCrm`,
       method: "POST",
       timeout: "5000",
-      data:data,
+      data: data,
       headers: {
-        Accept: "application/json",
-        Authorization: `bearer ${token}`
+        "Content-Type": "multipart/form-data",
+        "Authorization": `bearer ${token}`,
       },
     });
     return JSON.stringify(response.data);
@@ -116,6 +116,19 @@ class CrmService {
   async maxVersion(id,token){
     const response = await axios({
       url: `${url_base}/crm/maxVersion?id=${id}`,
+      method: "GET",
+      timeout: "5000",
+      headers: {
+        Accept: "application/json",
+        Authorization: `bearer ${token}`
+      },
+    })
+    return JSON.stringify(response.data);
+  }
+
+  async getAllCrms(id,token){
+    const response = await axios({
+      url: `${url_base}/crm/allCrm?id=${id}`,
       method: "GET",
       timeout: "5000",
       headers: {

@@ -25,12 +25,20 @@
 .crm_info h1 , .crm_info span, .insideSpan{
     color: white;
 }
-.criador{
+
+.header_info{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    gap: 0.3rem;
+    
+}
+
+.atribute{
     display: flex;
     align-items: center;
-    margin-bottom: 2rem;
 }
-.criador span{
+.atribute span{
     padding-left: 0.3rem;
     font-size: 1.4rem;
 }

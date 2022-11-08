@@ -1,4 +1,7 @@
 //pages
+import CreateCrm from "./pages/CreateCrm";
+import Crm from "./pages/Crm";
+import Versions from "./pages/Versions";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 
@@ -6,8 +9,6 @@ import Login from "./pages/Login";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./context/auth";
-import CreateCrm from "./pages/CreateCrm";
-import Crm from "./pages/Crm";
 
 const Private = ({ Item }) => {
   const { signed } = useContext(AuthContext);
@@ -25,6 +26,7 @@ function AppRouter() {
         <Route path="/home" element={<Private Item={Home} />} />
         <Route path="/createCrm" element={<Private Item={CreateCrm} />} />
         <Route path="/crm" element={<Private Item={Crm} />} />
+        <Route path="/versions" element={<Private Item={Versions} />}/>
         <Route path="*" element={<Login />} />
       </Routes>
     </BrowserRouter>

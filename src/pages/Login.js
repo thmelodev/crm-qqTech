@@ -15,8 +15,8 @@ import { Navigate } from "react-router-dom";
 
 function Login() {
   const [hiddenPassword, setHiddenPassword] = useState(true);
-  const [matricula, setMatricula] = useState();
-  const [senha, setSenha] = useState();
+  const [matricula, setMatricula] = useState("");
+  const [senha, setSenha] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { signIn, signed } = useContext(AuthContext);
 
@@ -24,19 +24,33 @@ function Login() {
     setHiddenPassword(!hiddenPassword);
   };
 
+  const changeOpacity = () =>{ 
+    
+    if(document.getElementById('username').value != "" && document.getElementById('password').value != ""){
+      document.getElementsByClassName('entrar')[0].style.opacity = 1
+    }else{
+      document.getElementsByClassName('entrar')[0].style.opacity = 0.3
+    }
+  }
+
   const handleEntrar = async (evt) => {
-    setIsLoading(true)
-    evt.preventDefault();
-    let data = {
-      username: matricula,
-      password: senha,
-    };
-    await signIn(data);
-    setIsLoading(false)
+    evt.preventDefault()
+    setIsLoading(true);
+    if (matricula == "" || senha == "") {
+      alert("Preencha todos os campos");
+    }else{
+      evt.preventDefault();
+      let data = {
+        username: matricula,
+        password: senha,
+      };
+      await signIn(data);
+    }
+    setIsLoading(false);
   };
 
   if (signed && !isLoading) {
-    return <Navigate to="/home"/>;
+    return <Navigate to="/home" />;
   }
 
   return (
@@ -47,7 +61,10 @@ function Login() {
           <div className="field">
             <label htmlFor="username">Matrícula</label>
             <input
-              onChange={(e) => setMatricula(e.target.value)}
+              onChange={(e) =>{
+                setMatricula(e.target.value)
+                changeOpacity()
+              }}
               type="text"
               id="username"
             />
@@ -55,8 +72,11 @@ function Login() {
           <div className="field">
             <label htmlFor="password">Senha</label>
             <div className="password">
-              <input
-                onChange={(e) => setSenha(e.target.value)}
+              <input 
+                onChange={(e) => {
+                  setSenha(e.target.value)
+                  changeOpacity()
+                }}
                 type={hiddenPassword ? "password" : "text"}
                 id="password"
               />

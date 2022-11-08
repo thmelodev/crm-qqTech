@@ -93,7 +93,6 @@
     display: grid;
     grid-template-columns: auto;
     grid-template-rows: min-content min-content min-content;
-
     margin-left: auto;
 }
 
@@ -103,11 +102,21 @@
     cursor: pointer;
 }
 
-.filters{
-    display: grid;
-    grid-template-columns: min-content min-content;
-    gap: 1.8rem;
 
+.filters{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.8rem;
+}
+
+.div_filters{
+    display: flex;
+    gap: 1.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .crm_status{
@@ -175,12 +184,7 @@ button{
 }
 
 @media screen and (max-width: 38.75rem) {
-    .filters{
-        display: grid;
-        grid-template-columns: auto;
-        grid-template-rows: min-content min-content min-content min-content;
-    }
-
+    
     .header{
         justify-items: center;
     }
@@ -199,6 +203,9 @@ button{
         max-width: 28rem;
     }
 
+    .dataDeAbertura{
+        flex-direction: column;
+    }
    
 }
 
