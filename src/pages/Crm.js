@@ -114,6 +114,10 @@ function Crm() {
         data.append("setoresEnvolvidos", JSON.stringify(setorEnvolvido));
       }
 
+      for (const setorEnvolvido of addSetoresEnvolvidos) {
+        data.append("setoresEnvolvidos", JSON.stringify(setorEnvolvido));
+      }
+
       for (const sistemaEnvolvido of sistemasEnvolvidos) {
         data.append("sistemasEnvolvidos", JSON.stringify(sistemaEnvolvido));
       }
