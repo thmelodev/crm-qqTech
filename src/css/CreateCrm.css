@@ -74,27 +74,35 @@
   width: 5rem;
 }
 
-.label_date {
+.label_date, .label_desenvolvimento {
   font-size: 2rem;
   text-transform: uppercase;
   margin-bottom: 3rem;
 }
 
-.radioDataLegal {
+.radioDataLegal,.radioDesenvolvimento {
   display: flex;
   gap: 8rem;
   margin-bottom: 2rem;
 }
 
-.radioDataLegal input {
+.radioDataLegal input,.radioDesenvolvimento input {
   scale: 1.5;
   width: min-content;
   margin-right: 0.8rem;
 }
 
-.radioDataLegal label {
+.radioDataLegal label,.radioDesenvolvimento label {
   font-size: 2rem;
   text-transform: uppercase;
+}
+
+#desenvolvimento{
+  margin: 3rem;
+}
+
+#desenvolvimento{
+  display: none;
 }
 
 #date{

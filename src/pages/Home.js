@@ -302,7 +302,6 @@ function Home() {
                 <h1 className="notCrm">Nenhuma CRM rejeitada foi encontrada</h1>
               ) : (
                 filterAll(approvedCrms).map((crm) => {
-                  console.log(crm);
                   return (
                     <Link
                       to={`/crm?id=${crm.id}&versao=${crm.versao}`}

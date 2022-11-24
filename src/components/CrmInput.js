@@ -1,6 +1,6 @@
 import "../css/CrmInput.css";
 
-function CrmInput({ title, label, name, type, onChange, value, readOnly }) {
+function CrmInput({ title, label, name, type, onChange, value, readOnly, placeholder }) {
 
   function isReadOnly() {
     if (readOnly) {
@@ -27,11 +27,11 @@ function CrmInput({ title, label, name, type, onChange, value, readOnly }) {
     return readOnly;
   }
 
-  function displayFlex() {
-    const radioYes = document.getElementById("yes");
-    const dateInput = document.getElementById("date");
+  function displayFlex(radioYesID,divInputID) {
+    const radioYes = document.getElementById(radioYesID);
+    const div_input = document.getElementById(divInputID);
     if (!!radioYes && radioYes.checked) {
-      dateInput.style.display = "flex";
+      div_input.style.display = "flex";
     }
   }
 
@@ -40,29 +40,65 @@ function CrmInput({ title, label, name, type, onChange, value, readOnly }) {
       {title === undefined ? (
         label === undefined ? (
           type !== "date" ? (
-            isReadOnly() ? (
-              <input
-                className="title_crm"
-                type={type}
-                name={name}
-                value={value}
-                placeholder="NOME DA CRM"
-                onChange={onChange}
-                readOnly
-              />
-            ) : (
-              <input
-                className="title_crm"
-                type={type}
-                name={name}
-                value={value}
-                placeholder="NOME DA CRM"
-                onChange={onChange}
-              />
+            isReadOnly() ? ( 
+              name == 'desenvolvimentoDependente'
+              ? (
+                <>
+                  <input
+                    className="title_crm"
+                    type={type}
+                    id={name}
+                    name={name}
+                    value={value}
+                    placeholder={placeholder}
+                    onChange={onChange}
+                    readOnly
+                  />
+                  {displayFlex("yesDesenvolvimento",'desenvolvimento')}
+                </>
+              ) :
+              (
+                <input
+                  className="title_crm"
+                  type={type}
+                  id={name}
+                  name={name}
+                  value={value}
+                  placeholder={placeholder}
+                  onChange={onChange}
+                  readOnly
+                />
+              )
+            ) : ( 
+              name == 'desenvolvimentoDependente'
+              ? (
+                <>
+                  <input
+                    className="title_crm"
+                    type={type}
+                    id={name}
+                    name={name}
+                    value={value}
+                    placeholder={placeholder}
+                    onChange={onChange}
+                  />
+                  {displayFlex("yesDesenvolvimento",'desenvolvimento')}
+                </>
+              ) :
+              (
+                <input
+                  className="title_crm"
+                  type={type}
+                  id={name}
+                  name={name}
+                  value={value}
+                  placeholder={placeholder}
+                  onChange={onChange}
+                />
+              )
             )
           ) : isReadOnly() ? (
             <>
-              {displayFlex()}
               <input
                 className="input_crm date_crm"
                 type={type}
@@ -72,6 +108,7 @@ function CrmInput({ title, label, name, type, onChange, value, readOnly }) {
                 onChange={onChange}
                 readOnly
               />
+              {displayFlex("yes",'date')}
             </>
           ) : (
             <>
@@ -83,7 +120,7 @@ function CrmInput({ title, label, name, type, onChange, value, readOnly }) {
                 value={value}
                 onChange={onChange}
               />
-              {displayFlex()}
+              {displayFlex("yes",'date')}
             </>
           )
         ) : (

@@ -45,6 +45,7 @@ function Crm() {
   const [sistemas, setSistemas] = useState([]);
   const [sistemasEnvolvidos, setSistemasEnvolvidos] = useState([]);
   const [documentos, setDocumentos] = useState([]);
+  const [desenvolvimentoDependente, setDesenvolvimentoDependente] = useState('')
   const [colaboradorCriador, setColaboradorCriador] = useState("");
   const [motivoRejeicao, setMotivoRejeicao] = useState("");
   const [complexidade, setComplexidade] = useState();
@@ -95,6 +96,13 @@ function Crm() {
   const handleUpdateCrm = async (evt) => {
     setIsLoading(true);
     evt.preventDefault();
+    if(document.querySelector('input[name="legalData"]:checked').value === "no"){
+      setDataLegal(undefined)
+    }
+    if(document.querySelector('input[name="desenvolvimentoDependente"]:checked')
+    .value === "no"){
+      setDesenvolvimentoDependente('')
+    }
     if (true) {
       const data = new FormData();
       data.append("id", crm.id);
@@ -107,6 +115,7 @@ function Crm() {
       data.append("justificativa", justificativa);
       data.append("alternativas", alternativas);
       data.append("dataLegal", dataLegal);
+      data.append("desenvolvimentoDependente",desenvolvimentoDependente)
       data.append("comportamentoOffline", comportamentoOffline);
       data.append("colaboradorCriador", JSON.stringify(colaboradorCriador));
 
@@ -214,6 +223,28 @@ function Crm() {
     }
   };
 
+  const handleDesenvolvimento = () => {
+    const div_desenvolvimento = document.getElementById("desenvolvimento");
+    const div_radio = document.getElementsByClassName(
+      "radioDesenvolvimento"
+    )[0];
+    const desenvolvimentoDependenteInput = document.getElementById(
+      "desenvolvimentoDependente"
+    );
+    if (
+      document.querySelector('input[name="desenvolvimentoDependente"]:checked')
+        .value === "yes"
+    ) {
+      div_desenvolvimento.style.display = "flex";
+      div_desenvolvimento.style.marginBottom = "2rem";
+      div_radio.style.marginBottom = "0";
+    } else {
+      desenvolvimentoDependenteInput.value = "";
+      div_desenvolvimento.style.display = "none";
+      div_radio.style.marginBottom = "3rem";
+    }
+  };
+
   const getSectors = async (token) => {
     try {
       const response = await setorService.listSectors(token);
@@ -266,6 +297,10 @@ function Crm() {
 
       if (response[0].dataLegal != undefined) {
         setDataLegal(response[0].dataLegal);
+      }
+
+      if (response[0].desenvolvimentoDependente != undefined) {
+        setDesenvolvimentoDependente(response[0].desenvolvimentoDependente);
       }
 
       if (response[0].descricao != undefined) {
@@ -666,10 +701,9 @@ function Crm() {
                     <label htmlFor="no">Não</label>
                   </div>
                 </>
-              ) : 
-              canEdit && 
-              crm.dataLegal != null &&
-              crm.dataLegal != undefined ? (
+              ) : canEdit &&
+                crm.dataLegal != null &&
+                crm.dataLegal != undefined ? (
                 <>
                   <div>
                     <input
@@ -693,37 +727,37 @@ function Crm() {
                     <label htmlFor="no">Não</label>
                   </div>
                 </>
-              ):
-              (<>
-                <div>
-                  <input
-                    type="radio"
-                    name="legalData"
-                    value="yes"
-                    id="yes"
-                    onChange={handleLegalDate}
-                  />
-                  <label htmlFor="yes">Sim</label>
-                </div>
-                <div>
-                  <input
-                    type="radio"
-                    name="legalData"
-                    value="no"
-                    id="no"
-                    onChange={handleLegalDate}
-                    defaultChecked
-                  />
-                  <label htmlFor="no">Não</label>
-                </div>
-              </>)}
+              ) : (
+                <>
+                  <div>
+                    <input
+                      type="radio"
+                      name="legalData"
+                      value="yes"
+                      id="yes"
+                      onChange={handleLegalDate}
+                    />
+                    <label htmlFor="yes">Sim</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="legalData"
+                      value="no"
+                      id="no"
+                      onChange={handleLegalDate}
+                      defaultChecked
+                    />
+                    <label htmlFor="no">Não</label>
+                  </div>
+                </>
+              )}
             </div>
             <div id="date">
               {!canEdit && crm.dataLegal != null ? (
                 <CrmInput
                   type="date"
                   name="dataLegal"
-                  onChange={(e) => setDataLegal(e.target.value)}
                   value={dataLegal}
                   readOnly={true}
                 />
@@ -737,7 +771,7 @@ function Crm() {
                 />
               )}
             </div>
-            {!!complexidade && getStatusCrm(setoresEnvolvidos) == 'approved' ? (
+            {!!complexidade && getStatusCrm(setoresEnvolvidos) == "approved" ? (
               <div className="viewComplexidade">
                 <h1>Complexidade</h1>
                 <div className="divRadioComplexidade_crm">
@@ -818,16 +852,17 @@ function Crm() {
                 </div>
               </div>
             ) : null}
-            
-            {!!impactoMudanca && getStatusCrm(setoresEnvolvidos) == 'approved'
-            ?(<CrmInput
-              type="text"
-              label="Impacto da Mudança"
-              name="impactoMudanca"
-              value={impactoMudanca}
-              readOnly={true}
-            />) 
-            :(null)}
+
+            {!!impactoMudanca &&
+            getStatusCrm(setoresEnvolvidos) == "approved" ? (
+              <CrmInput
+                type="text"
+                label="Impacto da Mudança"
+                name="impactoMudanca"
+                value={impactoMudanca}
+                readOnly={true}
+              />
+            ) : null}
 
             <div className="sectorsDiv">
               <span className="sectorDivTitle">sistemas envolvidos</span>
@@ -905,23 +940,159 @@ function Crm() {
             </div>
 
             {!canEdit ? null : (
-              <>
-                <div className="filesAdd" value="adicionar arquivos">
-                  <span>ADICIONAR ARQUIVOS</span>
-                  <FileUpload
-                    files={documentos}
-                    setFiles={setDocumentos}
-                    className="file_upload"
-                  />
-                </div>
-
-                <input
-                  className="submit"
-                  type="submit"
-                  onClick={handleUpdateCrm}
-                  value="enviar crm"
+              <div className="filesAdd" value="adicionar arquivos">
+                <span>ADICIONAR ARQUIVOS</span>
+                <FileUpload
+                  files={documentos}
+                  setFiles={setDocumentos}
+                  className="file_upload"
                 />
-              </>
+              </div>
+            )}
+
+            <span className="label_desenvolvimento">Possui desenvolvimento dependente?</span>
+            <div className="radioDesenvolvimento">
+              {!canEdit &&
+              crm.desenvolvimentoDependente != null &&
+              crm.desenvolvimentoDependente != undefined &&
+              crm.desenvolvimentoDependente != "" ? (
+                <>
+                  <div>
+                    <input
+                      type="radio"
+                      name="desenvolvimentoDependente"
+                      value="yes"
+                      id="yesDesenvolvimento"
+                      onChange={handleDesenvolvimento}
+                      defaultChecked
+                    />
+                    <label htmlFor="yesDesenvolvimento">Sim</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="desenvolvimentoDependente"
+                      value="no"
+                      id="noDesenvolvimento"
+                      onChange={handleDesenvolvimento}
+                      disabled
+                    />
+                    <label htmlFor="noDesenvolvimento">Não</label>
+                  </div>
+                </>
+              ) : !canEdit &&
+                (crm.desenvolvimentoDependente == null ||
+                  crm.desenvolvimentoDependente == undefined ||
+                  crm.desenvolvimentoDependente == "") ? (
+                <>
+                  <div>
+                    <input
+                      type="radio"
+                      name="desenvolvimentoDependente"
+                      value="yes"
+                      id="yesDesenvolvimento"
+                      onChange={handleDesenvolvimento}
+                      disabled
+                    />
+                    <label htmlFor="yesDesenvolvimento">Sim</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="desenvolvimentoDependente"
+                      value="no"
+                      id="noDesenvolvimento"
+                      onChange={handleDesenvolvimento}
+                      defaultChecked
+                    />
+                    <label htmlFor="noDesenvolvimento">Não</label>
+                  </div>
+                </>
+              ) : canEdit &&
+                crm.desenvolvimentoDependente != null &&
+                crm.desenvolvimentoDependente != undefined &&
+                crm.desenvolvimentoDependente != "" ? (
+                <>
+                  <div>
+                    <input
+                      type="radio"
+                      name="desenvolvimentoDependente"
+                      value="yes"
+                      id="yesDesenvolvimento"
+                      onChange={handleDesenvolvimento}
+                      defaultChecked
+                    />
+                    <label htmlFor="yesDesenvolvimento">Sim</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="desenvolvimentoDependente"
+                      value="no"
+                      id="noDesenvolvimento"
+                      onChange={handleDesenvolvimento}
+                    />
+                    <label htmlFor="noDesenvolvimento">Não</label>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <input
+                      type="radio"
+                      name="desenvolvimentoDependente"
+                      value="yes"
+                      id="yesDesenvolvimento"
+                      onChange={handleDesenvolvimento}
+                    />
+                    <label htmlFor="yesDesenvolvimento">Sim</label>
+                  </div>
+                  <div>
+                    <input
+                      type="radio"
+                      name="desenvolvimentoDependente"
+                      value="no"
+                      id="noDesenvolvimento"
+                      onChange={handleDesenvolvimento}
+                      defaultChecked
+                    />
+                    <label htmlFor="noDesenvolvimento">Não</label>
+                  </div>
+                </>
+              )}
+            </div>
+            <div id="desenvolvimento">
+              {console.log(!canEdit &&
+              crm.desenvolvimentoDependente != null)}
+              {!canEdit &&
+              crm.desenvolvimentoDependente != null  ? (
+                <CrmInput
+                  type="text"
+                  name="desenvolvimentoDependente"
+                  placeholder="NOME DO DESENVOLVIMENTO"
+                  onChange={(e) => setDesenvolvimentoDependente(e.target.value)}
+                  value={desenvolvimentoDependente}
+                  readOnly={true}
+                />
+              ) : (
+                <CrmInput
+                  type="text"
+                  name="desenvolvimentoDependente"
+                  placeholder="NOME DO DESENVOLVIMENTO"
+                  onChange={(e) => setDesenvolvimentoDependente(e.target.value)}
+                  value={desenvolvimentoDependente}
+                  readOnly={false}
+                />
+              )}
+            </div>
+
+            {!canEdit ? null : (
+              <input
+                className="submit"
+                type="submit"
+                onClick={handleUpdateCrm}
+                value="enviar crm"
+              />
             )}
           </form>
         </>

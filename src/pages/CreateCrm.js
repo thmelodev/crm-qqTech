@@ -33,8 +33,10 @@ function CreateCrm() {
   const [sistemas, setSistemas] = useState([]);
   const [sistemasEnvolvidos, setSistemasEnvolvidos] = useState([]);
   const [documentos, setDocumentos] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [desenvolvimentoDependente, setDesenvolvimentoDependente] = useState('')
   const [colaboradorCriador, setColaboradorCriador] = useState();
+  
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -68,6 +70,7 @@ function CreateCrm() {
       data.append("justificativa", justificativa);
       data.append("alternativas", alternativas);
       data.append("dataLegal", dataLegal);
+      data.append("desenvolvimentoDependente",desenvolvimentoDependente)
       data.append("comportamentoOffline", comportamentoOffline);
       data.append("colaboradorCriador", JSON.stringify(colaboradorCriador));
 
@@ -124,6 +127,24 @@ function CreateCrm() {
     }
   };
 
+  const handleDesenvolvimento = () => {
+    const div_desenvolvimento = document.getElementById("desenvolvimento");
+    const div_radio = document.getElementsByClassName("radioDesenvolvimento")[0];
+    const desenvolvimentoDependenteInput = document.getElementById("desenvolvimentoDependente");
+    console.log(document.querySelector('input[name="desenvolvimentoDependente"]:checked'))
+    if (
+      document.querySelector('input[name="desenvolvimentoDependente"]:checked').value === "yes"
+    ) {
+      div_desenvolvimento.style.display = "flex";
+      div_desenvolvimento.style.marginBottom = "3rem";
+      div_radio.style.marginBottom = "0";
+    } else {
+      desenvolvimentoDependenteInput.value = '';
+      div_desenvolvimento.style.display = "none";
+      div_radio.style.marginBottom = "2rem";
+    }
+  };
+
   const getSectors = async (token) => {
     try {
       const response = await setorService.listSectors(token);
@@ -158,7 +179,7 @@ function CreateCrm() {
           <button onClick={handleReturnPage} className="header_img">
             <img src={Vector} alt="Icone de voltar" />
           </button>
-          <CrmInput type="text" onChange={(e) => setNome(e.target.value)} />
+          <CrmInput type="text" onChange={(e) => setNome(e.target.value)} placeholder='NOME DA CRM'/>
         </div>
         <CrmInput
           type="text"
@@ -285,6 +306,38 @@ function CreateCrm() {
               className="file_upload"
             />
           </div>
+        </div>
+
+        <span className="label_desenvolvimento">Possui desenvolvimento dependente?</span>
+        <div className="radioDesenvolvimento">
+          <div>
+            <input
+              type="radio"
+              name="desenvolvimentoDependente"
+              value="yes"
+              id="yesDesenvolvimento"
+              onChange={handleDesenvolvimento}
+            />
+            <label htmlFor="yesDesenvolvimento">Sim</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="desenvolvimentoDependente"
+              value="no"
+              id="noDesenvolvimento"
+              onChange={handleDesenvolvimento}
+            />
+            <label htmlFor="noDesenvolvimento">Não</label>
+          </div>
+        </div>
+        <div id="desenvolvimento">
+          <CrmInput
+            type="text"
+            name="desenvolvimentoDependente"
+            placeholder='NOME DO DESENVOLVIMENTO'
+            onChange={(e) => setDesenvolvimentoDependente(e.target.value)}
+          />
         </div>
 
         <input
